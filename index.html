@@ -1,392 +1,721 @@
+<!doctype html>
 <html lang="mn">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#140d17">
-<title>Birthday Studio</title>
+<title>Birthday Studio v3</title>
 <style>
 :root{
-  --bg:#120b14;
-  --bg2:#26101d;
-  --card:rgba(255,255,255,.07);
-  --line:rgba(255,255,255,.13);
-  --text:#fff8f4;
-  --muted:#cbb9c3;
-  --accent:#f3a7bc;
-  --accent2:#c77dff;
-  --shadow:0 24px 70px rgba(0,0,0,.35);
+  --bg:#120b14;--bg2:#26101d;--card:rgba(255,255,255,.07);--line:rgba(255,255,255,.13);
+  --text:#fff8f4;--muted:#cbb9c3;--accent:#f3a7bc;--shadow:0 24px 70px rgba(0,0,0,.35)
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden}
 body{
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
   background:
     radial-gradient(circle at 20% 10%,rgba(178,69,117,.22),transparent 28%),
     radial-gradient(circle at 80% 20%,rgba(117,59,168,.18),transparent 28%),
-    linear-gradient(160deg,var(--bg2),var(--bg));
+    linear-gradient(160deg,var(--bg2),var(--bg))
 }
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 .app{height:100%;position:relative}
 .page{
-  position:absolute;inset:0;
-  opacity:0;pointer-events:none;
-  transform:translateX(22px) scale(.985);
-  transition:.38s ease;
-  overflow:auto;
-  padding:22px 18px calc(30px + env(safe-area-inset-bottom));
+  position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateX(22px) scale(.985);
+  transition:.38s ease;overflow:auto;padding:22px 18px calc(30px + env(safe-area-inset-bottom))
 }
 .page.active{opacity:1;pointer-events:auto;transform:none}
 .shell{width:min(100%,1080px);margin:auto;min-height:100%;display:flex;flex-direction:column}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:4px 0 18px;
-}
-.brand{font-weight:800;letter-spacing:.2px}
-.badge{
-  font-size:12px;color:#f8e8ef;background:#ffffff0b;
-  border:1px solid var(--line);padding:8px 11px;border-radius:999px
-}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px}
+.brand{font-weight:800}.badge{font-size:12px;background:#ffffff0b;border:1px solid var(--line);padding:8px 11px;border-radius:999px}
 .hero{flex:1;display:grid;place-items:center;text-align:center;padding:26px 0}
 .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
 h1,h2,h3{margin:0}
-.hero h1{
-  font-family:Georgia,serif;font-style:italic;font-weight:500;
-  font-size:clamp(50px,12vw,88px);line-height:.96;margin:16px 0
-}
+.hero h1,.sectionTitle h2,.previewInner h2{font-family:Georgia,serif;font-style:italic;font-weight:500}
+.hero h1{font-size:clamp(50px,12vw,88px);line-height:.96;margin:16px 0}
 .hero p{max-width:560px;margin:0 auto 24px;color:var(--muted);line-height:1.7}
 .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.btn{
-  border:none;border-radius:18px;padding:14px 18px;font-weight:800;
-  background:linear-gradient(135deg,var(--accent),#e66ca0);color:#25131d;
-  box-shadow:0 14px 35px rgba(224,106,160,.22)
-}
-.btn.secondary{
-  background:#ffffff0b;color:var(--text);border:1px solid var(--line);box-shadow:none
-}
+.btn{border:none;border-radius:18px;padding:14px 18px;font-weight:800;background:linear-gradient(135deg,var(--accent),#e66ca0);color:#25131d}
+.btn.secondary{background:#ffffff0b;color:var(--text);border:1px solid var(--line)}
 .btn.small{padding:10px 14px;border-radius:14px;font-size:13px}
 .sectionTitle{padding:8px 0 20px;text-align:center}
-.sectionTitle h2{
-  font-family:Georgia,serif;font-style:italic;font-weight:500;
-  font-size:clamp(38px,8vw,66px)
-}
+.sectionTitle h2{font-size:clamp(38px,8vw,66px)}
 .sectionTitle p{color:var(--muted);margin:8px 0 0}
-.packages{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
-  margin:auto;width:100%;max-width:980px
-}
-.pkg{
-  border:1px solid var(--line);background:var(--card);border-radius:26px;padding:22px;
-  box-shadow:var(--shadow);position:relative;overflow:hidden
-}
-.pkg.popular:before{
-  content:"POPULAR";position:absolute;top:14px;right:-28px;
-  transform:rotate(40deg);background:var(--accent);color:#27151d;
-  padding:7px 38px;font-size:10px;font-weight:900;letter-spacing:1px
-}
-.pkg h3{font-size:23px}
-.price{font-size:33px;font-weight:900;margin:12px 0 4px}
-.subprice{color:var(--muted);font-size:12px}
-.features{margin:18px 0 22px;padding:0;list-style:none;display:grid;gap:10px;color:#f6e8ee}
-.features li{font-size:14px}
-.features li:before{content:"✓";margin-right:8px;color:var(--accent)}
-.back{
-  display:inline-flex;align-items:center;gap:7px;
-  border:none;background:transparent;color:var(--muted);padding:4px 0;font-weight:700
-}
-.paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:auto}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:auto;width:100%;max-width:980px}
+.pkg{border:1px solid var(--line);background:var(--card);border-radius:26px;padding:22px;box-shadow:var(--shadow);position:relative}
+.pkg.popular:before{content:"POPULAR";position:absolute;top:14px;right:-28px;transform:rotate(40deg);background:var(--accent);color:#27151d;padding:7px 38px;font-size:10px;font-weight:900}
+.price{font-size:33px;font-weight:900;margin:12px 0 4px}.subprice{color:var(--muted);font-size:12px}
+.features{margin:18px 0 22px;padding:0;list-style:none;display:grid;gap:10px}.features li{font-size:14px}.features li:before{content:"✓";margin-right:8px;color:var(--accent)}
+.back{border:none;background:transparent;color:var(--muted);padding:4px 0;font-weight:700}
 .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
-.card h3{margin-bottom:12px}
-.qr{
-  width:180px;aspect-ratio:1;border-radius:18px;margin:12px auto;
-  display:grid;place-items:center;background:#fff;color:#111;font-size:48px;font-weight:900
-}
-.info{color:var(--muted);line-height:1.7;font-size:14px}
-.field{
-  width:100%;background:#ffffff09;border:1px solid var(--line);color:var(--text);
-  border-radius:15px;padding:13px 14px;margin:7px 0;outline:none
-}
+.paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:auto}
+.qr{width:180px;aspect-ratio:1;border-radius:18px;margin:12px auto;display:grid;place-items:center;background:#fff;color:#111;font-size:48px;font-weight:900}
+.info,.notice{color:var(--muted);line-height:1.6;font-size:13px}
+.field{width:100%;background:#ffffff09;border:1px solid var(--line);color:var(--text);border-radius:15px;padding:13px 14px;margin:7px 0;outline:none}
 textarea.field{min-height:110px;resize:vertical}
-.builderGrid{display:grid;grid-template-columns:390px 1fr;gap:16px;min-height:0;flex:1}
+.builderGrid{display:grid;grid-template-columns:410px 1fr;gap:16px;min-height:0;flex:1}
 .controls{overflow:auto;max-height:calc(100vh - 100px)}
-.previewWrap{min-height:0}
-.previewPhone{
-  height:100%;min-height:620px;border-radius:30px;border:1px solid var(--line);
-  overflow:hidden;background:#24101b;position:relative;box-shadow:var(--shadow)
-}
+.previewPhone{height:100%;min-height:620px;border-radius:30px;border:1px solid var(--line);overflow:hidden;background:#24101b;box-shadow:var(--shadow)}
 .previewInner{
   height:100%;padding:38px 22px;text-align:center;overflow:auto;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.08),transparent 20%),
-    linear-gradient(160deg,var(--preview1,#4b1830),var(--preview2,#170b12));
+  background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.08),transparent 20%),linear-gradient(160deg,var(--preview1,#4b1830),var(--preview2,#170b12))
 }
-.previewInner h2{
-  font-family:Georgia,serif;font-style:italic;font-weight:500;
-  font-size:44px;margin:12px 0
-}
-.previewInner p{line-height:1.7}
-.previewGift{font-size:72px;margin:24px 0}
-.previewGallery{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
-.ph{
-  background:#fff0e7;color:#6a5560;border-radius:10px;padding:7px;min-height:145px;
-  display:grid;place-items:center;font-size:12px
-}
+.previewInner h2{font-size:44px;margin:12px 0}.previewInner p{line-height:1.7}.previewGift{font-size:72px;margin:20px 0}
+.previewGallery{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:18px}
+.previewGallery img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:4px solid #f8eee8;box-shadow:0 8px 20px #0005}
+.ph{background:#fff0e7;color:#6a5560;border-radius:10px;padding:7px;min-height:145px;display:grid;place-items:center;font-size:12px}
 .colorRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 input[type="color"]{width:100%;height:46px;border:none;border-radius:12px;background:transparent}
-.lockbar{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding-top:12px
-}
-.pill{padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
-.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
+.lockedFeature{opacity:.38;pointer-events:none;filter:saturate(.4)}
+.featureLabel{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.tag{font-size:10px;border:1px solid var(--line);padding:5px 8px;border-radius:999px;color:var(--muted)}
+.videoPreview{width:100%;margin-top:18px;border-radius:16px;display:none;background:#000}
+.lockbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px}.pill{padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.success{color:#b9f4cf}
 .hidden{display:none!important}
 @media(max-width:860px){
-  html,body{overflow:auto;height:auto}
-  .app{min-height:100vh}
-  .page{position:fixed}
-  .packages{grid-template-columns:1fr}
-  .paymentGrid{grid-template-columns:1fr}
-  .builderGrid{grid-template-columns:1fr;overflow:auto}
-  .controls{max-height:none}
-  .previewPhone{min-height:650px}
+  html,body{overflow:auto;height:auto}.app{min-height:100vh}.page{position:fixed}.packages,.paymentGrid,.builderGrid{grid-template-columns:1fr}.controls{max-height:none}.previewPhone{min-height:650px}
 }
 </style>
 </head>
 <body>
+
 <div class="app">
 
-  <section class="page active" id="home">
-    <div class="shell">
-      <div class="topbar">
-        <div class="brand">Birthday Studio ✦</div>
-        <div class="badge">Create • Personalize • Share</div>
-      </div>
-      <div class="hero">
-        <div>
-          <div class="eyebrow">A personalized digital gift</div>
-          <h1>Make Their<br>Day Special</h1>
-          <p>Нэр, зураг, видео, захиа, өнгө болон theme-ээ өөрөө сонгоод төрсөн өдрийн тусгай website үүсгээрэй.</p>
-          <div class="actions">
-            <button class="btn" onclick="go('packages')">Багц сонгох</button>
-            <button class="btn secondary" onclick="go('builder')">Demo builder үзэх</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="page active" id="home">
+<div class="shell">
+  <div class="topbar">
+    <div class="brand">Birthday Studio ✦</div>
+    <div class="badge">v3</div>
+  </div>
 
-  <section class="page" id="packages">
-    <div class="shell">
-      <div class="topbar">
-        <button class="back" onclick="go('home')">← Буцах</button>
-        <div class="badge">Step 1 / 3</div>
-      </div>
-      <div class="sectionTitle">
-        <div class="eyebrow">Choose your experience</div>
-        <h2>Pick a Package</h2>
-        <p>Дараа нь үнэ, feature-үүдээ хүссэнээр өөрчилж болно.</p>
-      </div>
-      <div class="packages">
-        <div class="pkg">
-          <h3>Normal</h3>
-          <div class="price">19,900₮</div>
-          <div class="subprice">Simple & sweet</div>
-          <ul class="features">
-            <li>6 зураг</li>
-            <li>Нэр + захиа</li>
-            <li>Countdown</li>
-            <li>1 theme</li>
-            <li>Unique link</li>
-          </ul>
-          <button class="btn" style="width:100%" onclick="choose('Normal','19900')">Сонгох</button>
-        </div>
+  <div class="hero">
+    <div>
+      <div class="eyebrow">A personalized digital gift</div>
+      <h1>Make Their<br>Day Special</h1>
+      <p>Багцаа сонгоод зураг, видео, текст, theme-ээ өөрөө тохируулж төрсөн өдрийн тусгай website үүсгээрэй.</p>
 
-        <div class="pkg popular">
-          <h3>Premium</h3>
-          <div class="price">34,900₮</div>
-          <div class="subprice">Most popular</div>
-          <ul class="features">
-            <li>15 зураг</li>
-            <li>1 видео</li>
-            <li>Custom өнгө</li>
-            <li>Custom текстүүд</li>
-            <li>Premium animation</li>
-          </ul>
-          <button class="btn" style="width:100%" onclick="choose('Premium','34900')">Сонгох</button>
-        </div>
-
-        <div class="pkg">
-          <h3>Advanced</h3>
-          <div class="price">49,900₮</div>
-          <div class="subprice">Full experience</div>
-          <ul class="features">
-            <li>30+ зураг</li>
-            <li>2 видео</li>
-            <li>Custom theme</li>
-            <li>Илүү олон section</li>
-            <li>Advanced effects</li>
-          </ul>
-          <button class="btn" style="width:100%" onclick="choose('Advanced','49900')">Сонгох</button>
-        </div>
+      <div class="actions">
+        <button class="btn" onclick="go('packages')">Багц сонгох</button>
+        <button class="btn secondary" onclick="demoBuilder()">Builder demo</button>
       </div>
     </div>
-  </section>
+  </div>
+</div>
+</section>
 
-  <section class="page" id="payment">
-    <div class="shell">
-      <div class="topbar">
-        <button class="back" onclick="go('packages')">← Буцах</button>
-        <div class="badge">Step 2 / 3</div>
-      </div>
-      <div class="sectionTitle">
-        <div class="eyebrow">Payment</div>
-        <h2 id="payTitle">Premium Package</h2>
-        <p id="payPrice">34,900₮</p>
-      </div>
+<section class="page" id="packages">
+<div class="shell">
 
-      <div class="paymentGrid">
-        <div class="card">
-          <h3>QPay / QR</h3>
-          <div class="qr">QR</div>
-          <p class="info">Энд дараа нь чиний жинхэнэ QPay QR зураг орно. Одоогоор UI demo.</p>
-        </div>
+  <div class="topbar">
+    <button class="back" onclick="go('home')">← Буцах</button>
+    <div class="badge">Step 1 / 3</div>
+  </div>
 
-        <div class="card">
-          <h3>Дансаар төлөх</h3>
-          <p class="info">
-            Банк: <b>Таны банк</b><br>
-            Данс: <b>0000000000</b><br>
-            Нэр: <b>Таны нэр</b><br>
-            Утга: <b>Утасны дугаар / нэр</b>
-          </p>
+  <div class="sectionTitle">
+    <div class="eyebrow">Choose your experience</div>
+    <h2>Pick a Package</h2>
+    <p>Багц бүр өөр лимит, feature-тэй.</p>
+  </div>
 
-          <input id="code" class="field" placeholder="Activation code">
-          <button class="btn" style="width:100%" onclick="activate()">Code баталгаажуулах</button>
-          <div class="notice">Одоогийн demo code: <b>BDAY-DEMO</b>. Дараагийн шатанд энэ code database-аас шалгагдана.</div>
-        </div>
+  <div class="packages">
+
+    <div class="pkg">
+      <h3>Normal</h3>
+      <div class="price">19,900₮</div>
+      <div class="subprice">Simple & sweet</div>
+
+      <ul class="features">
+        <li>6 зураг</li>
+        <li>Нэр + захиа</li>
+        <li>Countdown</li>
+        <li>Fixed theme</li>
+        <li>Unique link</li>
+      </ul>
+
+      <button class="btn" style="width:100%" onclick="choose('Normal',19900)">Сонгох</button>
+    </div>
+
+    <div class="pkg popular">
+      <h3>Premium</h3>
+      <div class="price">34,900₮</div>
+      <div class="subprice">Most popular</div>
+
+      <ul class="features">
+        <li>15 зураг</li>
+        <li>1 видео</li>
+        <li>Custom өнгө</li>
+        <li>Custom текст</li>
+        <li>Premium animation</li>
+      </ul>
+
+      <button class="btn" style="width:100%" onclick="choose('Premium',34900)">Сонгох</button>
+    </div>
+
+    <div class="pkg">
+      <h3>Advanced</h3>
+      <div class="price">49,900₮</div>
+      <div class="subprice">Full experience</div>
+
+      <ul class="features">
+        <li>30 зураг</li>
+        <li>2 видео</li>
+        <li>Custom theme</li>
+        <li>Extra sections</li>
+        <li>Advanced effects</li>
+      </ul>
+
+      <button class="btn" style="width:100%" onclick="choose('Advanced',49900)">Сонгох</button>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section class="page" id="payment">
+<div class="shell">
+
+  <div class="topbar">
+    <button class="back" onclick="go('packages')">← Буцах</button>
+    <div class="badge">Step 2 / 3</div>
+  </div>
+
+  <div class="sectionTitle">
+    <div class="eyebrow">Payment</div>
+    <h2 id="payTitle">Package</h2>
+    <p id="payPrice"></p>
+  </div>
+
+  <div class="paymentGrid">
+
+    <div class="card">
+      <h3>QPay / QR</h3>
+      <div class="qr">QR</div>
+      <p class="info">Энд жинхэнэ QR дараагийн шатанд орно.</p>
+    </div>
+
+    <div class="card">
+      <h3>Activation</h3>
+
+      <input id="code" class="field" placeholder="Activation code">
+
+      <button class="btn" style="width:100%" onclick="activate()">
+        Code баталгаажуулах
+      </button>
+
+      <div class="notice">
+        Demo code: <b>BDAY-DEMO</b>
       </div>
     </div>
-  </section>
 
-  <section class="page" id="builder">
-    <div class="shell">
-      <div class="topbar">
-        <button class="back" onclick="go('home')">← Нүүр</button>
-        <div class="badge" id="activePkg">Demo Builder</div>
+  </div>
+</div>
+</section>
+
+<section class="page" id="builder">
+<div class="shell">
+
+  <div class="topbar">
+    <button class="back" onclick="go('home')">← Нүүр</button>
+    <div class="badge" id="activePkg">Demo</div>
+  </div>
+
+  <div class="builderGrid">
+
+    <div class="card controls">
+
+      <h3>Customize your website</h3>
+
+      <input id="bName" class="field" placeholder="Нэр" value="Someone Special" oninput="syncPreview()">
+
+      <input id="bDate" class="field" type="date">
+
+      <div class="featureLabel">
+        <span>Headline</span>
+        <span class="tag">All plans</span>
       </div>
 
-      <div class="builderGrid">
-        <div class="card controls">
-          <h3>Customize your website</h3>
+      <input id="bHeadline" class="field" value="Your Special Day" oninput="syncPreview()">
 
-          <input id="bName" class="field" placeholder="Нэр" value="Someone Special" oninput="syncPreview()">
-          <input id="bDate" class="field" type="date" oninput="syncPreview()">
-          <input id="bHeadline" class="field" value="Your Special Day" oninput="syncPreview()">
-          <textarea id="bLetter" class="field" oninput="syncPreview()">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</textarea>
+      <div class="featureLabel">
+        <span>Letter</span>
+        <span class="tag">All plans</span>
+      </div>
 
-          <div class="colorRow">
-            <div>
-              <div class="notice">Background 1</div>
-              <input type="color" id="c1" value="#4b1830" oninput="syncPreview()">
-            </div>
-            <div>
-              <div class="notice">Background 2</div>
-              <input type="color" id="c2" value="#170b12" oninput="syncPreview()">
-            </div>
-          </div>
+      <textarea id="bLetter" class="field" oninput="syncPreview()">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</textarea>
 
-          <select id="fontSelect" class="field" onchange="syncPreview()">
-            <option value="Georgia,serif">Elegant Serif</option>
-            <option value="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">Modern</option>
-            <option value="'Times New Roman',serif">Classic</option>
-          </select>
+      <div id="colorFeature">
 
-          <div class="notice">Зураг upload дараагийн хувилбарт package limit-тэй холбогдоно.</div>
-          <input class="field" type="file" accept="image/*" multiple disabled>
-          <input class="field" type="file" accept="video/*" disabled>
-
-          <div class="lockbar">
-            <span class="pill">Preview mode</span>
-            <button class="btn small" onclick="fakeFinalize()">Finalize</button>
-          </div>
-          <div class="notice" id="finalMsg"></div>
+        <div class="featureLabel">
+          <span>Custom colors</span>
+          <span class="tag">Premium+</span>
         </div>
 
-        <div class="previewWrap">
-          <div class="previewPhone">
-            <div class="previewInner" id="preview">
-              <div class="eyebrow">✦ A little surprise for <span id="pvName">Someone Special</span> ✦</div>
-              <div class="previewGift">🎁</div>
-              <h2 id="pvHeadline">Your Special Day</h2>
-              <p id="pvLetter">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</p>
-              <div class="previewGallery">
-                <div class="ph">Photo 1</div>
-                <div class="ph">Photo 2</div>
-                <div class="ph">Photo 3</div>
-                <div class="ph">Photo 4</div>
-              </div>
-            </div>
-          </div>
+        <div class="colorRow">
+          <input type="color" id="c1" value="#4b1830" oninput="syncPreview()">
+          <input type="color" id="c2" value="#170b12" oninput="syncPreview()">
         </div>
+
+      </div>
+
+      <div id="fontFeature">
+
+        <div class="featureLabel">
+          <span>Font style</span>
+          <span class="tag">Premium+</span>
+        </div>
+
+        <select id="fontSelect" class="field" onchange="syncPreview()">
+          <option value="Georgia,serif">Elegant Serif</option>
+          <option value="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">Modern</option>
+          <option value="'Times New Roman',serif">Classic</option>
+        </select>
+
+      </div>
+
+      <div class="featureLabel">
+        <span>Photos</span>
+        <span class="tag" id="photoLimitTag">6 max</span>
+      </div>
+
+      <input id="photos" class="field" type="file" accept="image/*" multiple onchange="loadPhotos()">
+
+      <div id="photoMsg" class="notice"></div>
+
+      <div id="videoFeature">
+
+        <div class="featureLabel">
+          <span>Video</span>
+          <span class="tag">Premium+</span>
+        </div>
+
+        <input id="video" class="field" type="file" accept="video/*" onchange="loadVideo()">
+
+      </div>
+
+      <div id="extraFeature">
+
+        <div class="featureLabel">
+          <span>Extra section</span>
+          <span class="tag">Advanced</span>
+        </div>
+
+        <textarea id="extraText" class="field" placeholder="Extra message..." oninput="syncPreview()"></textarea>
+
+      </div>
+
+      <div class="lockbar">
+        <span class="pill">Preview mode</span>
+        <button class="btn small" onclick="fakeFinalize()">Finalize</button>
+      </div>
+
+      <div class="notice" id="finalMsg"></div>
+
+    </div>
+
+    <div class="previewPhone">
+      <div class="previewInner" id="preview">
+
+        <div class="eyebrow">
+          ✦ A little surprise for
+          <span id="pvName">Someone Special</span>
+          ✦
+        </div>
+
+        <div class="previewGift">🎁</div>
+
+        <h2 id="pvHeadline">
+          Your Special Day
+        </h2>
+
+        <p id="pvLetter">
+          Happy Birthday! Шинэ нас чинь аз жаргал,
+          гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨
+        </p>
+
+        <div class="previewGallery" id="gallery">
+          <div class="ph">Photo 1</div>
+          <div class="ph">Photo 2</div>
+          <div class="ph">Photo 3</div>
+          <div class="ph">Photo 4</div>
+        </div>
+
+        <video id="pvVideo" class="videoPreview" controls playsinline></video>
+
+        <p id="pvExtra" class="hidden"></p>
+
       </div>
     </div>
-  </section>
+
+  </div>
+</div>
+</section>
 
 </div>
 
 <script>
-let selectedPackage = 'Demo';
-let selectedPrice = '';
+
+let selectedPackage='Demo';
+
+let photoLimit=6;
+
+let allowVideo=false;
+
+let allowColors=false;
+
+let allowExtra=false;
+
+let objectUrls=[];
 
 function go(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+
+  document
+    .querySelectorAll('.page')
+    .forEach(p=>p.classList.remove('active'));
+
+  document
+    .getElementById(id)
+    .classList.add('active');
+
 }
 
 function choose(pkg,price){
+
   selectedPackage=pkg;
-  selectedPrice=price;
-  document.getElementById('payTitle').textContent=pkg+' Package';
-  document.getElementById('payPrice').textContent=Number(price).toLocaleString()+'₮';
+
+  document
+    .getElementById('payTitle')
+    .textContent=pkg+' Package';
+
+  document
+    .getElementById('payPrice')
+    .textContent=price.toLocaleString()+'₮';
+
   go('payment');
+
 }
 
 function activate(){
-  const code=document.getElementById('code').value.trim();
+
+  const code=
+    document
+      .getElementById('code')
+      .value
+      .trim();
+
   if(code!=='BDAY-DEMO'){
-    alert('Demo code буруу байна. BDAY-DEMO гэж оруул.');
+
+    alert('Demo code: BDAY-DEMO');
+
     return;
+
   }
-  document.getElementById('activePkg').textContent=selectedPackage+' Activated ✓';
+
+  applyPackage(selectedPackage);
+
   go('builder');
+
+}
+
+function demoBuilder(){
+
+  selectedPackage='Premium';
+
+  applyPackage('Premium');
+
+  go('builder');
+
+}
+
+function applyPackage(pkg){
+
+  if(pkg==='Normal'){
+
+    photoLimit=6;
+
+    allowVideo=false;
+
+    allowColors=false;
+
+    allowExtra=false;
+
+  }
+
+  else if(pkg==='Premium'){
+
+    photoLimit=15;
+
+    allowVideo=true;
+
+    allowColors=true;
+
+    allowExtra=false;
+
+  }
+
+  else if(pkg==='Advanced'){
+
+    photoLimit=30;
+
+    allowVideo=true;
+
+    allowColors=true;
+
+    allowExtra=true;
+
+  }
+
+  else{
+
+    photoLimit=6;
+
+    allowVideo=false;
+
+    allowColors=false;
+
+    allowExtra=false;
+
+  }
+
+  document
+    .getElementById('activePkg')
+    .textContent=pkg+' Activated ✓';
+
+  document
+    .getElementById('photoLimitTag')
+    .textContent=photoLimit+' max';
+
+  toggleFeature(
+    'videoFeature',
+    allowVideo
+  );
+
+  toggleFeature(
+    'colorFeature',
+    allowColors
+  );
+
+  toggleFeature(
+    'fontFeature',
+    allowColors
+  );
+
+  toggleFeature(
+    'extraFeature',
+    allowExtra
+  );
+
+  if(!allowColors){
+
+    document.getElementById('c1').value='#4b1830';
+
+    document.getElementById('c2').value='#170b12';
+
+    document.getElementById('fontSelect').value='Georgia,serif';
+
+  }
+
+  syncPreview();
+
+}
+
+function toggleFeature(id,on){
+
+  const el=document.getElementById(id);
+
+  el.classList.toggle(
+    'lockedFeature',
+    !on
+  );
+
 }
 
 function syncPreview(){
-  const name=document.getElementById('bName').value || 'Someone Special';
-  const headline=document.getElementById('bHeadline').value || 'Your Special Day';
-  const letter=document.getElementById('bLetter').value || '';
-  const c1=document.getElementById('c1').value;
-  const c2=document.getElementById('c2').value;
-  const font=document.getElementById('fontSelect').value;
 
-  document.getElementById('pvName').textContent=name;
-  document.getElementById('pvHeadline').textContent=headline;
-  document.getElementById('pvLetter').textContent=letter;
-  const pv=document.getElementById('preview');
-  pv.style.setProperty('--preview1',c1);
-  pv.style.setProperty('--preview2',c2);
-  pv.style.fontFamily=font;
+  const name=
+    document.getElementById('bName').value
+    || 'Someone Special';
+
+  const headline=
+    document.getElementById('bHeadline').value
+    || 'Your Special Day';
+
+  const letter=
+    document.getElementById('bLetter').value
+    || '';
+
+  const pv=
+    document.getElementById('preview');
+
+  document
+    .getElementById('pvName')
+    .textContent=name;
+
+  document
+    .getElementById('pvHeadline')
+    .textContent=headline;
+
+  document
+    .getElementById('pvLetter')
+    .textContent=letter;
+
+  if(allowColors){
+
+    pv.style.setProperty(
+      '--preview1',
+      document.getElementById('c1').value
+    );
+
+    pv.style.setProperty(
+      '--preview2',
+      document.getElementById('c2').value
+    );
+
+    pv.style.fontFamily=
+      document.getElementById('fontSelect').value;
+
+  }
+
+  else{
+
+    pv.style.setProperty(
+      '--preview1',
+      '#4b1830'
+    );
+
+    pv.style.setProperty(
+      '--preview2',
+      '#170b12'
+    );
+
+    pv.style.fontFamily='Georgia,serif';
+
+  }
+
+  const extra=
+    document.getElementById('extraText').value
+    || '';
+
+  const extraOut=
+    document.getElementById('pvExtra');
+
+  if(allowExtra && extra){
+
+    extraOut.textContent=extra;
+
+    extraOut.classList.remove('hidden');
+
+  }
+
+  else{
+
+    extraOut.classList.add('hidden');
+
+  }
+
+}
+
+function loadPhotos(){
+
+  const files=[
+    ...document
+      .getElementById('photos')
+      .files
+  ];
+
+  const gallery=
+    document.getElementById('gallery');
+
+  document
+    .getElementById('photoMsg')
+    .textContent='';
+
+  if(files.length>photoLimit){
+
+    document
+      .getElementById('photoMsg')
+      .textContent=
+      '⚠️ '+selectedPackage+
+      ' багц хамгийн ихдээ '+
+      photoLimit+
+      ' зураг зөвшөөрнө.';
+
+  }
+
+  gallery.innerHTML='';
+
+  files
+    .slice(0,photoLimit)
+    .forEach(f=>{
+
+      const url=
+        URL.createObjectURL(f);
+
+      objectUrls.push(url);
+
+      const img=
+        document.createElement('img');
+
+      img.src=url;
+
+      gallery.appendChild(img);
+
+    });
+
+  if(!files.length){
+
+    gallery.innerHTML=
+      '<div class="ph">Photo 1</div>'+
+      '<div class="ph">Photo 2</div>';
+
+  }
+
+}
+
+function loadVideo(){
+
+  if(!allowVideo)return;
+
+  const f=
+    document
+      .getElementById('video')
+      .files[0];
+
+  const v=
+    document.getElementById('pvVideo');
+
+  if(!f){
+
+    v.style.display='none';
+
+    return;
+
+  }
+
+  const url=
+    URL.createObjectURL(f);
+
+  objectUrls.push(url);
+
+  v.src=url;
+
+  v.style.display='block';
+
 }
 
 function fakeFinalize(){
-  document.getElementById('finalMsg').innerHTML =
-    'Demo: дараагийн шатанд энд <b>unique locked link</b> үүсээд activation code USED болно.';
-}
-</script>
-</body>
-</html>'''
 
-p = Path('/mnt/data/birthday_studio_v2.html')
-p.write_text(html, encoding='utf-8')
-print(p)
+  document
+    .getElementById('finalMsg')
+    .innerHTML=
+    '<span class="success">✓ Builder data бэлэн.</span> '+
+    'Дараагийн шатанд энэ товч Supabase руу хадгалаад unique locked link үүсгэнэ.';
+
+}
+
+</script>
+
+</body>
+</html>
