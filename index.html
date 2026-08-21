@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Birthday Studio ✦</title>
+<style>
+:root{
+  --bg:#130c15;
+  --card:#251820cc;
+  --pink:#f3a7bc;
+  --cream:#fff1e8;
+  --line:#ffffff22;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 20% 10%,#52223b 0,transparent 28%),
+    radial-gradient(circle at 80% 30%,#3a1733 0,transparent 24%),
+    var(--bg);
+  color:var(--cream);
+  font-family:Georgia,serif;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:radial-gradient(#fff 1px,transparent 1px);
+  background-size:42px 42px;
+  opacity:.12;
+}
+section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:70px 18px;
+  position:relative;
+}
+.wrap{
+  width:min(100%,1000px);
+  text-align:center;
+}
+.eyebrow{
+  letter-spacing:4px;
+  font:11px system-ui;
+  text-transform:uppercase;
+  opacity:.75;
+}
+h1,h2{
+  font-weight:500;
+  font-style:italic;
+  margin:12px 0;
+}
+h1{font-size:clamp(52px,9vw,100px)}
+h2{font-size:clamp(40px,7vw,72px)}
+p{
+  font-family:system-ui;
+  line-height:1.8;
+  color:#f8e9e9;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 24px 70px #0006;
+  backdrop-filter:blur(15px);
+}
+input,textarea,button{font:inherit}
+.field{
+  width:100%;
+  border:1px solid var(--line);
+  background:#ffffff0d;
+  color:white;
+  border-radius:13px;
+  padding:13px;
+  margin:6px 0;
+  font-family:system-ui;
+}
+textarea{
+  min-height:140px;
+  resize:vertical;
+}
+.btn{
+  border:1px solid #ffffff35;
+  background:#ffffff12;
+  color:white;
+  padding:12px 20px;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:system-ui;
+  font-weight:700;
+}
+.btn:hover{background:#ffffff20}
+.admin{
+  min-height:auto;
+  padding:25px 18px;
+}
+.admin .card{
+  max-width:850px;
+  margin:auto;
+  text-align:left;
+}
+.admin h3{
+  margin:5px 0 15px;
+  font-family:system-ui;
+}
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.hint{
+  font:12px system-ui;
+  opacity:.65;
+}
+.count{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin:28px 0;
+}
+.unit{
+  width:105px;
+  padding:18px 8px;
+  background:#ffffff0d;
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+.num{font-size:38px}
+.lab{
+  font:10px system-ui;
+  letter-spacing:2px;
+  opacity:.65;
+}
+.gift{
+  font-size:90px;
+  cursor:pointer;
+  display:inline-block;
+  filter:drop-shadow(0 15px 25px #0008);
+  animation:float 2s ease-in-out infinite;
+}
+@keyframes float{
+  50%{transform:translateY(-9px)}
+}
+.hidden{display:none!important}
+.polaroids{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:28px;
+}
+.pol{
+  background:#f7efe8;
+  padding:9px 9px 30px;
+  transform:rotate(var(--r));
+  box-shadow:0 12px 35px #0007;
+}
+.pol img{
+  width:100%;
+  aspect-ratio:4/5;
+  object-fit:cover;
+  display:block;
+  background:#ddd;
+}
+.empty{
+  width:100%;
+  aspect-ratio:4/5;
+  display:grid;
+  place-items:center;
+  background:#e7ded8;
+  color:#5d5050;
+  font:13px system-ui;
+}
+.video{
+  width:100%;
+  max-height:560px;
+  border-radius:18px;
+  background:#000;
+  margin-top:20px;
+}
+.letter{
+  text-align:left;
+  max-width:760px;
+  margin:25px auto;
+  font-size:17px;
+}
+.finalheart{
+  font-size:50px;
+  animation:pulse 1.2s infinite;
+}
+@keyframes pulse{
+  50%{transform:scale(1.18)}
+}
+#experience{display:none}
+#experience.show{display:block}
+#setup.hide{display:none}
+
+@media(max-width:650px){
+  .row{grid-template-columns:1fr}
+  .polaroids{grid-template-columns:1fr 1fr}
+  .unit{width:78px}
+  .num{font-size:30px}
+  .admin{padding-top:12px}
+}
+</style>
+</head>
+
+<body>
+
+<section class="admin" id="setup">
+  <div class="card">
+    <h3>🎂 Birthday Website Builder</h3>
+
+    <p class="hint">
+      Нэр, төрсөн өдөр, захиагаа бичээд зураг болон видеогоо өөрөө сонго.
+    </p>
+
+    <div class="row">
+      <input class="field" id="name" placeholder="Нэр ж: Anu">
+      <input class="field" id="date" type="datetime-local">
+    </div>
+
+    <textarea class="field" id="letter" placeholder="Төрсөн өдрийн захиа...">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай. Өнөөдөр бол зөвхөн чиний онцгой өдөр ✨</textarea>
+
+    <p class="hint">📸 Зургууд</p>
+    <input class="field" id="photos" type="file" accept="image/*" multiple>
+
+    <p class="hint">🎬 Видео</p>
+    <input class="field" id="videoFile" type="file" accept="video/*">
+
+    <button class="btn" id="build">✨ Website үүсгэх</button>
+  </div>
+</section>
+
+<div id="experience">
+
+<section id="countdown">
+  <div class="wrap">
+    <div class="eyebrow">✦ Something beautiful is coming ✦</div>
+
+    <h1>
+      Her Special Day
+      <br>
+      is Coming
+    </h1>
+
+    <p id="forName">A little surprise made with love ♡</p>
+
+    <div class="count">
+      <div class="unit">
+        <div class="num" id="d">00</div>
+        <div class="lab">ӨДӨР</div>
+      </div>
+
+      <div class="unit">
+        <div class="num" id="h">00</div>
+        <div class="lab">ЦАГ</div>
+      </div>
+
+      <div class="unit">
+        <div class="num" id="m">00</div>
+        <div class="lab">МИНУТ</div>
+      </div>
+
+      <div class="unit">
+        <div class="num" id="s">00</div>
+        <div class="lab">СЕКУНД</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="document.querySelector('#giftSec').scrollIntoView()">
+      Түүний сюрпризыг нээ ↓
+    </button>
+  </div>
+</section>
+
+<section id="giftSec">
+  <div class="wrap">
+    <div class="eyebrow">✦ I have something for you ✦</div>
+
+    <div class="gift" id="gift">🎁</div>
+
+    <p>Бэлэг дээр дараарай ✨</p>
+  </div>
+</section>
+
+<section id="intro" class="hidden">
+  <div class="wrap">
+    <div class="eyebrow">✦ A love letter for you ✦</div>
+
+    <h1>
+      Your
+      <br>
+      Special Day
+    </h1>
+
+    <p>
+      Created with care, just for
+      <span class="person">you</span>
+    </p>
+
+    <button class="btn" onclick="document.querySelector('#letterSec').scrollIntoView()">
+      Read my letter ↓
+    </button>
+  </div>
+</section>
+
+<section id="letterSec">
+  <div class="wrap">
+    <h2>Happy Birthday</h2>
+
+    <div class="card letter">
+      <p id="letterOut"></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">✦ Every moment captured ✦</div>
+
+    <h2>Our Memories</h2>
+
+    <div class="polaroids" id="gallery"></div>
+  </div>
+</section>
+
+<section id="videoSec" class="hidden">
+  <div class="wrap">
+    <div class="eyebrow">✦ A special video message ✦</div>
+
+    <h2>A Moment For You</h2>
+
+    <video id="vid" class="video" controls playsinline></video>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+
+    <div class="card" style="max-width:700px;margin:auto">
+      <h2>Birthday Wishes</h2>
+
+      <p>
+        May this new chapter bring you happiness,
+        success, beautiful memories and everything
+        you've been wishing for.
+      </p>
+
+      <div class="finalheart">♡</div>
+
+      <button class="btn" id="edit">
+        ← Өөрчлөх / зураг солих
+      </button>
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let timer = null;
+let urls = [];
+
+function esc(s){
+  return (s || "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[c]));
+}
+
+function startTimer(target){
+
+  clearInterval(timer);
+
+  const tick = () => {
+
+    let x = Math.max(
+      0,
+      new Date(target) - new Date()
+    );
+
+    $("d").textContent =
+      String(Math.floor(x / 86400000))
+      .padStart(2,"0");
+
+    $("h").textContent =
+      String(Math.floor(x / 3600000) % 24)
+      .padStart(2,"0");
+
+    $("m").textContent =
+      String(Math.floor(x / 60000) % 60)
+      .padStart(2,"0");
+
+    $("s").textContent =
+      String(Math.floor(x / 1000) % 60)
+      .padStart(2,"0");
+
+  };
+
+  tick();
+
+  timer = setInterval(tick,1000);
+}
+
+$("build").onclick = () => {
+
+  const n =
+    $("name").value.trim() ||
+    "Someone Special";
+
+  const dt =
+    $("date").value ||
+    new Date(Date.now() + 86400000)
+    .toISOString()
+    .slice(0,16);
+
+  $("forName").textContent =
+    "A little surprise for " + n + " ♡";
+
+  document
+    .querySelectorAll(".person")
+    .forEach(x => x.textContent = n);
+
+  $("letterOut").innerHTML =
+    esc($("letter").value)
+    .replace(/\n/g,"<br>");
+
+  urls.forEach(URL.revokeObjectURL);
+  urls = [];
+
+  const gal = $("gallery");
+
+  gal.innerHTML = "";
+
+  const fs = [...$("photos").files];
+
+  if(!fs.length){
+
+    for(let i = 0; i < 6; i++){
+
+      let p = document.createElement("div");
+
+      p.className = "pol";
+
+      p.style.setProperty(
+        "--r",
+        ((i % 2 ? 2 : -2)) + "deg"
+      );
+
+      p.innerHTML =
+        '<div class="empty">📷 Энд зураг ' +
+        (i + 1) +
+        '</div>';
+
+      gal.appendChild(p);
+    }
+
+  }else{
+
+    fs.forEach((f,i) => {
+
+      const u = URL.createObjectURL(f);
+
+      urls.push(u);
+
+      const p = document.createElement("div");
+
+      p.className = "pol";
+
+      p.style.setProperty(
+        "--r",
+        ((i % 2 ? 2 : -2)) + "deg"
+      );
+
+      const im = document.createElement("img");
+
+      im.src = u;
+
+      p.appendChild(im);
+
+      gal.appendChild(p);
+    });
+
+  }
+
+  const vf = $("videoFile").files[0];
+
+  if(vf){
+
+    const u = URL.createObjectURL(vf);
+
+    urls.push(u);
+
+    $("vid").src = u;
+
+    $("videoSec").classList.remove("hidden");
+
+  }else{
+
+    $("videoSec").classList.add("hidden");
+
+  }
+
+  $("setup").classList.add("hide");
+
+  $("experience").classList.add("show");
+
+  $("intro").classList.add("hidden");
+
+  startTimer(dt);
+
+  window.scrollTo(0,0);
+};
+
+$("gift").onclick = () => {
+
+  $("intro").classList.remove("hidden");
+
+  setTimeout(() => {
+
+    $("intro").scrollIntoView({
+      behavior:"smooth"
+    });
+
+  },100);
+
+};
+
+$("edit").onclick = () => {
+
+  $("experience").classList.remove("show");
+
+  $("setup").classList.remove("hide");
+
+  window.scrollTo(0,0);
+
+};
+</script>
+
+</body>
+</html>
