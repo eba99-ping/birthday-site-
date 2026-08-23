@@ -4,1347 +4,1212 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#140d17">
-<title>Birthday Studio</title>
-
+<title>Wish Studio — Digital Greeting Builder</title>
 <style>
 :root{
-  --bg:#120b14;
-  --bg2:#26101d;
-  --card:rgba(255,255,255,.07);
-  --line:rgba(255,255,255,.13);
-  --text:#fff8f4;
-  --muted:#cbb9c3;
-  --accent:#f3a7bc;
-  --shadow:0 24px 70px rgba(0,0,0,.35);
+  --bg:#120b14;--bg2:#26101d;--card:rgba(255,255,255,.07);--line:rgba(255,255,255,.13);
+  --text:#fff8f4;--muted:#cbb9c3;--accent:#f3a7bc;--shadow:0 24px 70px rgba(0,0,0,.35)
 }
-
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  height:100%;
-  overflow:hidden;
-}
-
+html,body{margin:0;height:100%;overflow:hidden}
 body{
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
   background:
     radial-gradient(circle at 20% 10%,rgba(178,69,117,.22),transparent 28%),
     radial-gradient(circle at 80% 20%,rgba(117,59,168,.18),transparent 28%),
-    linear-gradient(160deg,var(--bg2),var(--bg));
+    linear-gradient(160deg,var(--bg2),var(--bg))
 }
-
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-
-.app{
-  height:100%;
-  position:relative;
-}
-
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{height:100%;position:relative}
 .page{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  pointer-events:none;
-  transform:translateX(22px) scale(.985);
-  transition:.35s ease;
-  overflow:auto;
-  padding:22px 18px calc(30px + env(safe-area-inset-bottom));
+  position:absolute;inset:0;opacity:0;pointer-events:none;transform:translateX(22px) scale(.985);
+  transition:.35s ease;overflow:auto;padding:22px 18px calc(30px + env(safe-area-inset-bottom))
 }
-
-.page.active{
-  opacity:1;
-  pointer-events:auto;
-  transform:none;
-}
-
-.shell{
-  width:min(100%,1080px);
-  margin:auto;
-  min-height:100%;
-  display:flex;
-  flex-direction:column;
-}
-
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:4px 0 18px;
-}
-
-.brand{font-weight:800}
-
-.badge{
-  font-size:12px;
-  background:#ffffff0b;
-  border:1px solid var(--line);
-  padding:8px 11px;
-  border-radius:999px;
-}
-
-.hero{
-  flex:1;
-  display:grid;
-  place-items:center;
-  text-align:center;
-  padding:26px 0;
-}
-
-.eyebrow{
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-
+.page.active{opacity:1;pointer-events:auto;transform:none}
+.shell{width:min(100%,1080px);margin:auto;min-height:100%;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 18px}
+.brand{font-weight:800}.badge{font-size:12px;background:#ffffff0b;border:1px solid var(--line);padding:8px 11px;border-radius:999px}
+.hero{flex:1;display:grid;place-items:center;text-align:center;padding:26px 0}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
 h1,h2,h3{margin:0}
+.hero h1,.sectionTitle h2,.previewInner h2,.viewerScreen h2{font-family:Georgia,serif;font-style:italic;font-weight:500}
+.hero h1{font-size:clamp(50px,12vw,88px);line-height:.96;margin:16px 0}
+.hero p{max-width:560px;margin:0 auto 24px;color:var(--muted);line-height:1.7}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{border:none;border-radius:18px;padding:14px 18px;font-weight:800;background:linear-gradient(135deg,var(--accent),#e66ca0);color:#25131d}.btn:disabled{opacity:.38;cursor:not-allowed;filter:grayscale(.35)}
+.btn.secondary{background:#ffffff0b;color:var(--text);border:1px solid var(--line)}
+.btn.small{padding:10px 14px;border-radius:14px;font-size:13px}
+.sectionTitle{padding:8px 0 20px;text-align:center}.sectionTitle h2{font-size:clamp(38px,8vw,66px)}.sectionTitle p{color:var(--muted)}
+.packages{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:auto;width:100%;max-width:980px}
+.pkg{border:1px solid var(--line);background:var(--card);border-radius:26px;padding:22px;box-shadow:var(--shadow);position:relative}
+.pkg.popular:before{content:"POPULAR";position:absolute;top:14px;right:-28px;transform:rotate(40deg);background:var(--accent);color:#27151d;padding:7px 38px;font-size:10px;font-weight:900}
+.price{font-size:33px;font-weight:900;margin:12px 0 4px}.subprice{color:var(--muted);font-size:12px}
+.features{margin:18px 0 22px;padding:0;list-style:none;display:grid;gap:10px}.features li{font-size:14px}.features li:before{content:"✓";margin-right:8px;color:var(--accent)}
+.back{border:none;background:transparent;color:var(--muted);padding:4px 0;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+.paymentGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:auto}
+.qr{width:min(300px,100%);border-radius:20px;margin:16px auto;overflow:hidden;background:#fff;box-shadow:0 18px 42px #0006}.qr img{display:block;width:100%;height:auto}
+.qpayHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.paymentStatus{font-size:10px;padding:7px 10px;border-radius:999px;border:1px solid #eac17655;background:#eac17612;color:#f2cd8e}.paymentStatus.paid{border-color:#8fe0ac55;background:#8fe0ac12;color:#aeeac2}.paymentStatus.rejected{border-color:#ff9fb255;background:#ff9fb212;color:#ffb3c1}.paymentDetails{display:grid;gap:8px;margin:16px 0}.paymentDetail{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--line);background:#ffffff05;border-radius:13px}.paymentDetail span{font-size:10px;color:var(--muted)}.paymentDetail strong,.paymentDetail code{font-size:13px;color:var(--text);text-align:right}.verifyResult{display:none;margin-top:12px;padding:16px;border-radius:16px;border:1px solid var(--line);font-size:12px;line-height:1.65}.verifyResult.show{display:block}.verifyResult.pending{background:#eac17610;border-color:#eac17655;color:#f2d29d}.verifyResult.success{background:#8fe0ac10;border-color:#8fe0ac55;color:#c7f4d7}.verifyResult.error{background:#ff9fb210;border-color:#ff9fb255;color:#ffc0cc}.paymentCode{display:block;margin:11px 0;padding:12px;border:1px dashed #8fe0ac88;border-radius:12px;background:#080b09aa;color:#bff3d2;font-size:18px;letter-spacing:2px;text-align:center;font-weight:900}.verifyActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.paymentAdminList{display:grid;gap:9px;max-height:330px;overflow:auto}.paymentAdminCard{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:#ffffff05}.paymentAdminCard strong{display:block}.paymentAdminMeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.paymentAdminMeta span{font-size:9px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 7px}.paymentAdminActions{display:flex;gap:6px;flex-wrap:wrap}.paymentAdminActions button{white-space:nowrap}
+.bankHero{display:flex;align-items:center;gap:13px;margin:16px 0;padding:15px;border:1px solid #f3a7bc33;border-radius:18px;background:#f3a7bc0b}.bankIcon{width:54px;height:54px;flex:0 0 54px;border-radius:17px;display:grid;place-items:center;background:var(--accent);color:#2b1720;font-size:27px}.bankHero strong{display:block;margin-bottom:4px}.bankHero span{font-size:11px;color:var(--muted);line-height:1.5}.paymentValue{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0}.paymentValue strong,.paymentValue code{overflow-wrap:anywhere}.copyMini{border:1px solid var(--line);background:#ffffff09;color:var(--accent);border-radius:9px;padding:6px 8px;font-size:9px;font-weight:800;white-space:nowrap}
+.info,.notice{color:var(--muted);line-height:1.6;font-size:13px}
+.field{width:100%;background:#ffffff09;border:1px solid var(--line);color:var(--text);border-radius:15px;padding:13px 14px;margin:7px 0;outline:none}
+textarea.field{min-height:110px;resize:vertical}
+.builderGrid{display:grid;grid-template-columns:410px 1fr;gap:16px;min-height:0;flex:1}
+.controls{overflow:auto;max-height:calc(100vh - 100px)}
+.previewPhone{height:100%;min-height:620px;border-radius:30px;border:1px solid var(--line);overflow:hidden;background:#24101b;box-shadow:var(--shadow)}
+.previewInner{height:100%;padding:38px 22px;text-align:center;overflow:auto;background:linear-gradient(160deg,var(--preview1,#4b1830),var(--preview2,#170b12))}
+.previewInner h2{font-size:44px;margin:12px 0}.previewInner p{line-height:1.7}.previewGift{font-size:72px;margin:20px 0;min-height:92px;display:grid;place-items:center}.previewGift img{max-width:150px;max-height:130px;object-fit:contain;border-radius:18px;filter:drop-shadow(0 14px 20px #0007)}
+.previewGallery,.viewerGallery{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:18px}
+.previewGallery img,.viewerGallery img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:4px solid #f8eee8;box-shadow:0 8px 20px #0005}
+.viewerGallery img{cursor:zoom-in;opacity:0;transform:translateY(34px) rotate(var(--tilt,0deg)) scale(.92);transition:border-color .2s ease,filter .2s ease}.viewerGallery img:hover{border-color:var(--accent);filter:brightness(1.08)}.viewerGallery.memoryReveal img{animation:memoryReveal .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:var(--delay,0ms)}
+.memoryLightbox{position:fixed;z-index:100;inset:0;background:#080409ed;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:70px 72px 55px;animation:lightboxIn .3s ease}.memoryLightbox.open{display:flex}.memoryLightbox img{max-width:min(900px,86vw);max-height:78vh;object-fit:contain;border-radius:20px;border:7px solid #fff4ef;box-shadow:0 35px 100px #000;animation:memoryZoom .4s cubic-bezier(.2,.8,.2,1)}.lightboxClose,.lightboxArrow{position:absolute;border:1px solid #ffffff33;background:#ffffff0d;color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(10px)}.lightboxClose{right:22px;top:20px;width:46px;height:46px;border-radius:50%;font-size:23px}.lightboxArrow{top:50%;transform:translateY(-50%);width:48px;height:64px;border-radius:16px;font-size:29px}.lightboxArrow.prev{left:18px}.lightboxArrow.next{right:18px}.lightboxCount{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:2px;color:var(--muted)}
+@keyframes memoryReveal{to{opacity:1;transform:translateY(0) rotate(var(--tilt,0deg)) scale(1)}}@keyframes lightboxIn{from{opacity:0}to{opacity:1}}@keyframes memoryZoom{from{opacity:0;transform:scale(.75) rotate(-2deg)}to{opacity:1;transform:none}}
+.ph{background:#fff0e7;color:#6a5560;border-radius:10px;padding:7px;min-height:145px;display:grid;place-items:center;font-size:12px}
+.colorRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}input[type="color"]{width:100%;height:46px;border:none;border-radius:12px;background:transparent}
+.lockedFeature{opacity:.38;pointer-events:none;filter:saturate(.4)}
+.featureLabel{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.tag{font-size:10px;border:1px solid var(--line);padding:5px 8px;border-radius:999px;color:var(--muted)}
+.surpriseChoices{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:8px 0}.surpriseChoice{border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:12px;padding:8px 4px;font-size:25px}.surpriseChoice.active{border-color:var(--accent);background:#f3a7bc22;box-shadow:0 0 0 2px #f3a7bc22}.customVisualRow{display:grid;grid-template-columns:1fr 1.4fr;gap:8px}.customVisualRow .field{min-width:0}.uploadVisual{display:flex;align-items:center;justify-content:center;text-align:center}
+.videoPreview,.viewerVideo{width:100%;margin-top:18px;border-radius:16px;display:none;background:#000}
+.lockbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px;flex-wrap:wrap}.pill{padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.success{color:#b9f4cf}.hidden{display:none!important}
 
-.hero h1,
-.sectionTitle h2,
-.previewInner h2,
-.viewerScreen h2{
-  font-family:Georgia,serif;
-  font-style:italic;
-  font-weight:500;
-}
-
-.hero h1{
-  font-size:clamp(50px,12vw,88px);
-  line-height:.96;
-  margin:16px 0;
-}
-
-.hero p{
-  max-width:560px;
-  margin:0 auto 24px;
-  color:var(--muted);
-  line-height:1.7;
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-.btn{
-  border:none;
-  border-radius:18px;
-  padding:14px 18px;
-  font-weight:800;
-  background:linear-gradient(135deg,var(--accent),#e66ca0);
-  color:#25131d;
-}
-
-.btn.secondary{
-  background:#ffffff0b;
-  color:var(--text);
-  border:1px solid var(--line);
-}
-
-.btn.small{
-  padding:10px 14px;
-  border-radius:14px;
-  font-size:13px;
-}
-
-.sectionTitle{
-  padding:8px 0 20px;
-  text-align:center;
-}
-
-.sectionTitle h2{
-  font-size:clamp(38px,8vw,66px);
-}
-
-.sectionTitle p{color:var(--muted)}
-
-.packages{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin:auto;
-  width:100%;
-  max-width:980px;
-}
-
-.pkg{
-  border:1px solid var(--line);
-  background:var(--card);
-  border-radius:26px;
-  padding:22px;
-  box-shadow:var(--shadow);
-  position:relative;
-  overflow:hidden;
-}
-
-.pkg.popular:before{
-  content:"POPULAR";
-  position:absolute;
-  top:14px;
-  right:-28px;
-  transform:rotate(40deg);
-  background:var(--accent);
-  color:#27151d;
-  padding:7px 38px;
-  font-size:10px;
-  font-weight:900;
-}
-
-.price{
-  font-size:33px;
-  font-weight:900;
-  margin:12px 0 4px;
-}
-
-.subprice{
-  color:var(--muted);
-  font-size:12px;
-}
-
-.features{
-  margin:18px 0 22px;
-  padding:0;
-  list-style:none;
-  display:grid;
-  gap:10px;
-}
-
-.features li{font-size:14px}
-
-.features li:before{
-  content:"✓";
-  margin-right:8px;
-  color:var(--accent);
-}
-
-.back{
-  border:none;
-  background:transparent;
-  color:var(--muted);
-  padding:4px 0;
-  font-weight:700;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:20px;
-  box-shadow:var(--shadow);
-}
-
-.paymentGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  max-width:900px;
-  margin:auto;
-}
-
-.qr{
-  width:180px;
-  aspect-ratio:1;
-  border-radius:18px;
-  margin:12px auto;
-  display:grid;
-  place-items:center;
-  background:#fff;
-  color:#111;
-  font-size:48px;
-  font-weight:900;
-}
-
-.info,.notice{
-  color:var(--muted);
-  line-height:1.6;
-  font-size:13px;
-}
-
-.field{
-  width:100%;
-  background:#ffffff09;
-  border:1px solid var(--line);
-  color:var(--text);
-  border-radius:15px;
-  padding:13px 14px;
-  margin:7px 0;
-  outline:none;
-}
-
-textarea.field{
-  min-height:110px;
-  resize:vertical;
-}
-
-.builderGrid{
-  display:grid;
-  grid-template-columns:410px 1fr;
-  gap:16px;
-  min-height:0;
-  flex:1;
-}
-
-.controls{
-  overflow:auto;
-  max-height:calc(100vh - 100px);
-}
-
-.previewPhone{
-  height:100%;
-  min-height:620px;
-  border-radius:30px;
-  border:1px solid var(--line);
-  overflow:hidden;
-  background:#24101b;
-  box-shadow:var(--shadow);
-}
-
-.previewInner{
-  height:100%;
-  padding:38px 22px;
-  text-align:center;
-  overflow:auto;
-  background:linear-gradient(
-    160deg,
-    var(--preview1,#4b1830),
-    var(--preview2,#170b12)
-  );
-}
-
-.previewInner h2{
-  font-size:44px;
-  margin:12px 0;
-}
-
-.previewInner p{line-height:1.7}
-
-.previewGift{
-  font-size:72px;
-  margin:20px 0;
-}
-
-.previewGallery,
-.viewerGallery{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:9px;
-  margin-top:18px;
-}
-
-.previewGallery img,
-.viewerGallery img{
-  width:100%;
-  aspect-ratio:4/5;
-  object-fit:cover;
-  border-radius:12px;
-  border:4px solid #f8eee8;
-  box-shadow:0 8px 20px #0005;
-}
-
-.ph{
-  background:#fff0e7;
-  color:#6a5560;
-  border-radius:10px;
-  padding:7px;
-  min-height:145px;
-  display:grid;
-  place-items:center;
-  font-size:12px;
-}
-
-.colorRow{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-}
-
-input[type="color"]{
-  width:100%;
-  height:46px;
-  border:none;
-  border-radius:12px;
-  background:transparent;
-}
-
-.lockedFeature{
-  opacity:.38;
-  pointer-events:none;
-  filter:saturate(.4);
-}
-
-.featureLabel{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:8px;
-}
-
-.tag{
-  font-size:10px;
-  border:1px solid var(--line);
-  padding:5px 8px;
-  border-radius:999px;
-  color:var(--muted);
-}
-
-.videoPreview,
-.viewerVideo{
-  width:100%;
-  margin-top:18px;
-  border-radius:16px;
-  display:none;
-  background:#000;
-}
-
-.lockbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding-top:12px;
-  flex-wrap:wrap;
-}
-
-.pill{
-  padding:8px 11px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  font-size:12px;
-  color:var(--muted);
-}
-
-.success{color:#b9f4cf}
-.hidden{display:none!important}
-
-/* Full website preview */
-
-#viewer{
-  padding:0;
-  background:#120b14;
-}
-
+/* Full recipient preview */
+#viewer{padding:0;background:#120b14}
 .viewerTop{
-  position:fixed;
-  z-index:50;
-  top:0;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 14px;
-  background:rgba(10,5,12,.72);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line);
+  position:fixed;z-index:50;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;background:rgba(10,5,12,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)
 }
-
 .viewerScreen{
-  min-height:100vh;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:80px 20px 40px;
-  background:linear-gradient(
-    160deg,
-    var(--viewer1,#4b1830),
-    var(--viewer2,#170b12)
-  );
+  min-height:100vh;display:none;align-items:center;justify-content:center;text-align:center;padding:80px 20px 40px;
+  background:linear-gradient(160deg,var(--viewer1,#4b1830),var(--viewer2,#170b12))
 }
-
 .viewerScreen.active{display:flex}
-
-.viewerContent{
-  width:min(100%,760px);
-}
-
-.viewerGift{
-  font-size:100px;
-  margin:20px 0;
-}
-
-.viewerScreen h2{
-  font-size:clamp(48px,12vw,88px);
-  margin:12px 0;
-}
-
+.viewerContent{width:min(100%,760px)}
+.viewerGift{font-size:100px;margin:20px auto;min-height:140px;display:grid;place-items:center;width:max-content;max-width:100%;cursor:pointer;border-radius:28px;transition:transform .25s ease,filter .25s ease;animation:surprisePulse 2s ease-in-out infinite;outline:none;position:relative}.viewerGift:hover,.viewerGift:focus{transform:scale(1.06);filter:brightness(1.12)}.viewerGift img{max-width:240px;max-height:210px;object-fit:contain;border-radius:24px;filter:drop-shadow(0 22px 30px #0009)}
+.clickHint{color:var(--accent);font-size:13px;letter-spacing:1.2px;animation:hintBounce 1.5s ease-in-out infinite}.viewerContent{position:relative}.viewerContent.opening .viewerGift{animation:openBurst .65s cubic-bezier(.2,.8,.2,1) forwards}.viewerContent.opening h2,.viewerContent.opening .clickHint,.viewerContent.opening .eyebrow{animation:fadeAway .5s ease forwards}.sparkle{position:absolute;left:50%;top:32%;font-size:22px;pointer-events:none;z-index:5;animation:sparkleFly .7s ease-out forwards;transform:translate(-50%,-50%) rotate(var(--r))}.viewerScreen.pageReveal .viewerContent{animation:pageReveal .55s ease both}
+@keyframes surprisePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04);filter:drop-shadow(0 0 18px #f3a7bc55)}}
+@keyframes hintBounce{0%,100%{transform:translateY(0);opacity:.72}50%{transform:translateY(-5px);opacity:1}}
+@keyframes openBurst{0%{transform:scale(1) rotate(0)}42%{transform:scale(.86) rotate(-4deg)}75%{transform:scale(1.22) rotate(4deg);filter:brightness(1.45) drop-shadow(0 0 45px var(--accent))}100%{transform:scale(1.5);opacity:0}}
+@keyframes fadeAway{to{opacity:0;transform:translateY(-14px)}}
+@keyframes sparkleFly{0%{opacity:1;transform:translate(-50%,-50%) scale(.5) rotate(var(--r))}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.35) rotate(var(--r))}}
+@keyframes pageReveal{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.viewerScreen h2{font-size:clamp(48px,12vw,88px);margin:12px 0}
 .viewerScreen p{line-height:1.8}
-
-.viewerNav{
-  margin-top:28px;
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-
-.viewerCount{
-  font-size:12px;
-  color:var(--muted);
-}
-
+.viewerNav{margin-top:28px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.viewerCount{font-size:12px;color:var(--muted)}
+.topActions{display:flex;align-items:center;gap:8px}.adminLink{border:1px solid var(--line);background:#ffffff08;color:var(--text);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:800}.adminLink:hover{border-color:var(--accent);color:var(--accent)}
+.adminLoginWrap{flex:1;display:grid;place-items:center;padding:30px 0}.adminLoginCard{width:min(430px,100%);text-align:center}.adminLoginIcon{width:66px;height:66px;margin:0 auto 18px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#e66ca0);color:#321621;font-size:29px}.adminLoginCard h2{font:italic 500 44px Georgia,serif;margin:8px 0}.adminLoginCard .field{text-align:center;letter-spacing:2px}.adminError{min-height:20px;color:#ff9fb2;font-size:12px}
+.adminShell{width:min(1240px,100%);margin:auto}.adminHeader{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:28px 0}.adminHeader h2{font:italic 500 46px Georgia,serif;margin:5px 0}.adminHeader p{margin:0;color:var(--muted);font-size:12px}.adminHeaderActions{display:flex;gap:8px;flex-wrap:wrap}.statsGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.statCard{padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--card)}.statCard span{display:block;color:var(--muted);font-size:10px;letter-spacing:1.4px;text-transform:uppercase}.statCard strong{display:block;font:italic 500 31px Georgia,serif;margin-top:8px}.adminGrid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.8fr);gap:16px}.adminPanel{border:1px solid var(--line);border-radius:22px;background:var(--card);padding:18px;box-shadow:var(--shadow)}.adminPanelHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.adminPanelHead h3{font:italic 500 24px Georgia,serif}.adminToolbar{display:grid;grid-template-columns:1fr 160px;gap:8px;margin-bottom:12px}.adminToolbar .field{margin:0}.orderList{display:grid;gap:9px;max-height:520px;overflow:auto}.orderCard{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:16px;background:#ffffff06}.orderMain{min-width:0}.orderMain strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.orderMeta{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;color:var(--muted);font-size:10px}.orderMeta span{border:1px solid var(--line);border-radius:999px;padding:4px 7px}.orderActions{display:flex;align-items:center;gap:6px}.orderActions select{background:#1d1019;color:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:10px}.iconBtn{border:1px solid var(--line);background:#ffffff08;color:#fff;border-radius:10px;width:34px;height:34px}.iconBtn.danger{color:#ff9fb2}.emptyState{text-align:center;color:var(--muted);padding:40px 12px;font-size:12px}.codeCreate{display:grid;grid-template-columns:1fr auto;gap:8px}.codeCreate .field{margin:0}.codeList{display:grid;gap:8px;margin-top:14px;max-height:285px;overflow:auto}.codeRow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:13px;background:#ffffff05}.codeRow code{font-weight:900;color:var(--accent);font-size:12px}.codeRow span{font-size:9px;color:var(--muted)}.codeRow.used{opacity:.45}.adminNote{margin-top:16px;padding:13px;border:1px solid #f3a7bc33;border-radius:14px;background:#f3a7bc0b;color:var(--muted);font-size:11px;line-height:1.6}
+.authWrap{flex:1;display:grid;place-items:center;padding:30px 0}.authCard{width:min(460px,100%)}.authCard h2{font:italic 500 42px Georgia,serif;text-align:center;margin:10px 0}.authCard>.info{text-align:center}.authTabs{display:grid;grid-template-columns:1fr 1fr;background:#ffffff07;border:1px solid var(--line);border-radius:14px;padding:4px;margin:20px 0}.authTab{border:0;border-radius:10px;padding:10px;background:transparent;color:var(--muted);font-weight:800}.authTab.active{background:var(--accent);color:#2c1620}.authForm{display:none}.authForm.active{display:block;animation:enter .3s ease}.authError{min-height:20px;color:#ff9fb2;font-size:12px;text-align:center}.phoneHint{font-size:10px;color:var(--muted);margin-top:-3px}.userHeader{display:flex;align-items:end;justify-content:space-between;gap:16px;padding:34px 0 22px}.userHeader h2{font:italic 500 48px Georgia,serif;margin:7px 0}.userHeader p{color:var(--muted);margin:0}.userProjectGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.userProjectCard{border:1px solid var(--line);border-radius:21px;background:var(--card);padding:19px;position:relative;overflow:hidden}.userProjectCard .statusDot{position:absolute;right:16px;top:16px;width:9px;height:9px;border-radius:50%;background:#e9bd7a}.userProjectCard .statusDot.published{background:#8fe0ac}.userProjectCard h3{font:italic 500 25px Georgia,serif;margin:13px 0 8px}.userProjectCard p{color:var(--muted);font-size:11px;line-height:1.6}.userProjectActions{display:flex;gap:7px;margin-top:16px}.userEmpty{grid-column:1/-1;text-align:center;padding:60px 20px;border:1px dashed var(--line);border-radius:22px;color:var(--muted)}.userList{display:grid;gap:8px;max-height:260px;overflow:auto}.userRow{display:flex;justify-content:space-between;gap:10px;padding:11px;border:1px solid var(--line);border-radius:13px}.userRow strong,.userRow span{display:block}.userRow strong{font-size:12px}.userRow span{font-size:9px;color:var(--muted);margin-top:3px}.userRow b{color:var(--accent);font-size:11px}
+.siteSettingsPanel{margin-bottom:16px}.siteSettingsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.settingField{display:block;color:var(--muted);font-size:10px;letter-spacing:.6px}.settingField .field{margin-top:6px}.settingField.wide{grid-column:span 2}.settingField.full{grid-column:1/-1}.settingField textarea{min-height:82px}.settingsSaveRow{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:12px}.settingsMessage{font-size:11px;color:#9de6b8;min-height:16px}
+.guideWrap{width:min(920px,100%);margin:0 auto;padding-bottom:28px}.guideLead{text-align:center;color:var(--muted);font-size:17px;line-height:1.65;max-width:620px;margin:10px auto 24px}.guideSteps{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.guideStep{display:grid;grid-template-columns:62px 1fr;gap:15px;align-items:start;border:1px solid var(--line);background:var(--card);border-radius:23px;padding:19px;box-shadow:0 14px 35px #0003}.guideIcon{width:62px;height:62px;border-radius:20px;display:grid;place-items:center;background:#f3a7bc18;border:1px solid #f3a7bc33;font-size:31px;position:relative}.guideNumber{position:absolute;right:-6px;top:-7px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#28151e;font-size:12px;font-weight:900;border:3px solid #25101b}.guideStep h3{font-size:19px;margin:2px 0 7px}.guideStep p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}.guideStep b{color:var(--text)}.guideTip{margin:16px 0;border:1px solid #f3a7bc44;background:#f3a7bc0d;border-radius:19px;padding:16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.guideActions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.purchaseReminder{margin-top:14px;padding:13px 15px;border:1px solid #f3a7bc55;border-radius:15px;background:#f3a7bc0d;color:var(--muted);font-size:12px;line-height:1.6}.purchaseReminder b{color:var(--text)}.builderAccessNotice{width:100%;padding:11px 13px;border-radius:14px;border:1px solid #9de6b844;background:#9de6b80b;color:#bceccd;font-size:11px;line-height:1.5}.builderAccessNotice.demo{border-color:#f3a7bc55;background:#f3a7bc0d;color:#ffd1df}.publishedLink{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.publishedLink code{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--accent)}
+.letterScene{min-height:520px;display:grid;place-items:center;position:relative;perspective:1200px}.envelopeWrap{text-align:center;transition:opacity .45s ease,transform .55s ease}.envelopeButton{width:250px;height:165px;border:0;border-radius:12px;background:linear-gradient(145deg,#f5a9c1,#e7709b);position:relative;cursor:pointer;box-shadow:0 28px 55px #0007;transition:transform .25s ease;overflow:visible}.envelopeButton:hover,.envelopeButton:focus{transform:translateY(-7px) scale(1.03);outline:2px solid #fff7}.envelopeButton:before{content:'';position:absolute;z-index:3;left:0;right:0;top:0;height:105px;background:linear-gradient(155deg,#ffc1d3,#ed88aa);clip-path:polygon(0 0,100% 0,50% 90%);transform-origin:top;transition:transform .65s cubic-bezier(.2,.8,.2,1);backface-visibility:hidden}.envelopeButton:after{content:'';position:absolute;z-index:2;inset:0;background:#d85e8a;clip-path:polygon(0 100%,0 25%,50% 70%,100% 25%,100% 100%)}.envelopeHeart{position:absolute;z-index:4;left:50%;top:62%;transform:translate(-50%,-50%);font-size:37px;filter:drop-shadow(0 5px 8px #8e264e66);transition:.35s ease}.envelopeHint{display:block;margin-top:25px;color:var(--accent);font-size:12px;letter-spacing:1.8px;animation:hintBounce 1.5s ease-in-out infinite}.letterPaper{position:absolute;width:min(620px,94vw);background:linear-gradient(165deg,#fff9f4,#f7e8e5);color:#3a202b;border-radius:20px;padding:38px clamp(23px,5vw,52px);box-shadow:0 35px 80px #0008;opacity:0;pointer-events:none;transform:translateY(100px) rotateX(-15deg) scale(.78);transition:opacity .55s ease,transform .75s cubic-bezier(.18,.9,.25,1);max-height:75vh;overflow:auto}.letterPaper .eyebrow{color:#ad5f7c}.letterPaper h2{font-size:clamp(38px,7vw,62px);letter-spacing:-2px;color:#4a2434}.letterPaper #vLetter{font:18px/1.85 Georgia,serif;color:#593a47}.letterPaper .btn.secondary{color:#4a2434;border-color:#4a243433;background:#4a24340d}.letterScene.opening .envelopeButton:before{transform:rotateX(180deg)}.letterScene.opening .envelopeHeart{transform:translate(-50%,-120%) scale(1.4);opacity:0}.letterScene.opened .envelopeWrap{opacity:0;transform:translateY(150px) scale(.7);pointer-events:none}.letterScene.opened .letterPaper{opacity:1;pointer-events:auto;transform:translateY(0) rotateX(0) scale(1)}
 @media(max-width:860px){
-  html,body{
-    overflow:auto;
-    height:auto;
-  }
-
-  .app{min-height:100vh}
-  .page{position:fixed}
-
-  .packages,
-  .paymentGrid,
-  .builderGrid{
-    grid-template-columns:1fr;
-  }
-
-  .controls{max-height:none}
-  .previewPhone{min-height:650px}
+  html,body{overflow:auto;height:auto}.app{min-height:100vh}.page{position:fixed}.packages,.paymentGrid,.builderGrid{grid-template-columns:1fr}.controls{max-height:none}.previewPhone{min-height:650px}
+  .statsGrid{grid-template-columns:repeat(2,1fr)}.adminGrid{grid-template-columns:1fr}.adminHeader,.userHeader{align-items:start;flex-direction:column}.adminToolbar{grid-template-columns:1fr}.orderCard,.paymentAdminCard{grid-template-columns:1fr}.orderActions{flex-wrap:wrap}.userProjectGrid{grid-template-columns:1fr}.siteSettingsGrid{grid-template-columns:1fr}.settingField.wide,.settingField.full{grid-column:auto}.guideSteps{grid-template-columns:1fr}
 }
 </style>
 </head>
-
 <body>
 <div class="app">
 
-<!-- НҮҮР ХУУДАС -->
-
 <section class="page active" id="home">
-  <div class="shell">
-
-    <div class="topbar">
-      <div class="brand">Birthday Studio ✦</div>
-      <div class="badge">v4</div>
-    </div>
-
-    <div class="hero">
-      <div>
-        <div class="eyebrow">A personalized digital gift</div>
-
-        <h1>
-          Make Their<br>
-          Day Special
-        </h1>
-
-        <p>
-          Багцаа сонгоод зураг, видео, текст, theme-ээ өөрөө
-          тохируулж төрсөн өдрийн тусгай website үүсгээрэй.
-        </p>
-
-        <div class="actions">
-          <button class="btn" onclick="go('packages')">
-            Багц сонгох
-          </button>
-
-          <button class="btn secondary" onclick="demoBuilder()">
-            Builder demo
-          </button>
-        </div>
-      </div>
-    </div>
-
-  </div>
+<div class="shell">
+  <div class="topbar"><div class="brand" id="homeBrand">Wish Studio ✦</div><div class="topActions"><button class="adminLink" id="accountButton" onclick="openAccount()">Нэвтрэх</button><div class="badge">v5</div></div></div>
+  <div class="hero"><div>
+    <div class="eyebrow" id="homeEyebrow">A personalized digital gift</div>
+    <h1 id="homeHeadline" style="white-space:pre-line">Make Their\nDay Special</h1>
+    <p id="homeIntro">Төрсөн өдөр, ойн баяр, хайр, баяр хүргэлт, талархал зэрэг хүссэн мэндчилгээгээ зураг, видео, захиа, theme-тэй тусгай website болгоорой.</p>
+    <div class="actions"><button class="btn" onclick="go('packages')">Багц сонгох</button><button class="btn secondary" onclick="demoBuilder()">Builder demo</button><button class="btn secondary" onclick="go('guide')">❓ Заавар</button></div>
+  </div></div>
+</div>
 </section>
 
-<!-- БАГЦУУД -->
+<section class="page" id="guide">
+<div class="shell">
+  <div class="topbar"><button class="back" onclick="go('home')">← Нүүр</button><div class="badge">МАШ АМАРХАН</div></div>
+  <div class="sectionTitle"><div class="eyebrow">Алхам алхмаар</div><h2>Яаж мэндчилгээ хийх вэ?</h2></div>
+  <div class="guideWrap">
+    <p class="guideLead">Доорх зургаан зүйлийг дарааллаар нь хийгээрэй. Товч бүр дээр юу хийхийг нь бичсэн байгаа. 😊</p>
+    <div class="guideSteps">
+      <article class="guideStep"><div class="guideIcon">📱<span class="guideNumber">1</span></div><div><h3>Эхлээд нэвтэрнэ</h3><p><b>“Нэвтрэх”</b> дээр дарна. Утасны дугаар, өөрийн PIN кодоо бичнэ. Шинэ хүн бол <b>“Бүртгүүлэх”</b>-ийг дарна.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">🎁<span class="guideNumber">2</span></div><div><h3>Багцаа сонгоно</h3><p><b>“Багц сонгох”</b> дээр дарна. Normal, Premium, Advanced гурваас дуртайгаа сонгоно.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">💳<span class="guideNumber">3</span></div><div><h3>Төлбөрийн кодоо бичнэ</h3><p>Сонгосон багцынхаа төлбөрийг хийнэ. Дараа нь танд өгсөн <b>нууц код</b>-ыг бичнэ. <b>Нэг code зөвхөн нэг website-д нэг удаа</b> ажиллана.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">✍️<span class="guideNumber">4</span></div><div><h3>Мэндчилгээгээ бичнэ</h3><p>Хүнийхээ нэр, мэндчилгээний төрөл, хэлэх үгээ бичнэ. Бичих бүрд жижиг website нь шууд өөрчлөгдөнө.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">📸<span class="guideNumber">5</span></div><div><h3>Зураг, бичлэгээ нэмнэ</h3><p><b>“Зураг сонгох”</b> дээр дараад гоё дурсамжуудаа нэмнэ. Хүсвэл бэлэг, торт, цэцгийн дүрсээ сонгоно.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">✅<span class="guideNumber">6</span></div><div><h3>Шалгаад дуусгана</h3><p><b>“Preview Website”</b>-ээр бүх хуудсаа үзнэ. Таалагдвал <b>“Finalize + Link”</b> дарна. Link зөвхөн багцын code идэвхжүүлсэн үед гарна.</p></div></article>
+    </div>
+    <div class="guideTip">💡 <b>Санаарай:</b> Алдаа гаргасан ч айх хэрэггүй. <b>“← Буцах”</b> товчоор буцаад дахин засаж болно.</div>
+    <div class="guideActions"><button class="btn" onclick="startGuideFlow()">Ойлголоо, эхэлье →</button><button class="btn secondary" onclick="go('home')">Нүүр рүү буцах</button></div>
+  </div>
+</div>
+</section>
 
 <section class="page" id="packages">
-  <div class="shell">
-
-    <div class="topbar">
-      <button class="back" onclick="go('home')">← Буцах</button>
-      <div class="badge">Step 1 / 3</div>
+<div class="shell">
+  <div class="topbar"><button class="back" onclick="go('home')">← Буцах</button><div class="badge">Step 1 / 3</div></div>
+  <div class="sectionTitle"><div class="eyebrow">Choose your experience</div><h2>Pick a Package</h2><p>Багц бүр өөр лимит, feature-тэй.<br><b style="color:var(--accent)">1 багц = 1 website = нэг удаагийн эрх.</b></p></div>
+  <div class="packages">
+    <div class="pkg"><h3>Normal</h3><div class="price" id="normalPrice">19,900₮</div><div class="subprice" id="normalSub">Simple & sweet</div>
+      <ul class="features" id="normalFeatures"><li>6 зураг</li><li>Нэр + захиа</li><li>Countdown</li><li>Fixed theme</li><li>Unique link</li></ul>
+      <button class="btn" style="width:100%" onclick="choose('Normal',planPrices.Normal)">Сонгох</button>
     </div>
-
-    <div class="sectionTitle">
-      <div class="eyebrow">Choose your experience</div>
-      <h2>Pick a Package</h2>
-      <p>Багц бүр өөр лимит, feature-тэй.</p>
+    <div class="pkg popular"><h3>Premium</h3><div class="price" id="premiumPrice">34,900₮</div><div class="subprice" id="premiumSub">Most popular</div>
+      <ul class="features" id="premiumFeatures"><li>15 зураг</li><li>1 видео</li><li>Custom өнгө</li><li>Custom текст</li><li>Premium animation</li></ul>
+      <button class="btn" style="width:100%" onclick="choose('Premium',planPrices.Premium)">Сонгох</button>
     </div>
-
-    <div class="packages">
-
-      <div class="pkg">
-        <h3>Normal</h3>
-        <div class="price">19,900₮</div>
-        <div class="subprice">Simple & sweet</div>
-
-        <ul class="features">
-          <li>6 зураг</li>
-          <li>Нэр + захиа</li>
-          <li>Countdown</li>
-          <li>Fixed theme</li>
-          <li>Unique link</li>
-        </ul>
-
-        <button
-          class="btn"
-          style="width:100%"
-          onclick="choose('Normal',19900)">
-          Сонгох
-        </button>
-      </div>
-
-      <div class="pkg popular">
-        <h3>Premium</h3>
-        <div class="price">34,900₮</div>
-        <div class="subprice">Most popular</div>
-
-        <ul class="features">
-          <li>15 зураг</li>
-          <li>1 видео</li>
-          <li>Custom өнгө</li>
-          <li>Custom текст</li>
-          <li>Premium animation</li>
-        </ul>
-
-        <button
-          class="btn"
-          style="width:100%"
-          onclick="choose('Premium',34900)">
-          Сонгох
-        </button>
-      </div>
-
-      <div class="pkg">
-        <h3>Advanced</h3>
-        <div class="price">49,900₮</div>
-        <div class="subprice">Full experience</div>
-
-        <ul class="features">
-          <li>30 зураг</li>
-          <li>2 видео</li>
-          <li>Custom theme</li>
-          <li>Extra sections</li>
-          <li>Advanced effects</li>
-        </ul>
-
-        <button
-          class="btn"
-          style="width:100%"
-          onclick="choose('Advanced',49900)">
-          Сонгох
-        </button>
-      </div>
-
+    <div class="pkg"><h3>Advanced</h3><div class="price" id="advancedPrice">49,900₮</div><div class="subprice" id="advancedSub">Full experience</div>
+      <ul class="features" id="advancedFeatures"><li>30 зураг</li><li>2 видео</li><li>Custom theme</li><li>Extra sections</li><li>Advanced effects</li></ul>
+      <button class="btn" style="width:100%" onclick="choose('Advanced',planPrices.Advanced)">Сонгох</button>
     </div>
   </div>
+</div>
 </section>
-
-<!-- ТӨЛБӨР -->
 
 <section class="page" id="payment">
-  <div class="shell">
-
-    <div class="topbar">
-      <button class="back" onclick="go('packages')">← Буцах</button>
-      <div class="badge">Step 2 / 3</div>
-    </div>
-
-    <div class="sectionTitle">
-      <div class="eyebrow">Payment</div>
-      <h2 id="payTitle">Package</h2>
-      <p id="payPrice"></p>
-    </div>
-
-    <div class="paymentGrid">
-
-      <div class="card">
-        <h3>QPay / QR</h3>
-        <div class="qr">QR</div>
-        <p class="info">
-          Энд жинхэнэ QR дараагийн шатанд орно.
-        </p>
+<div class="shell">
+  <div class="topbar"><button class="back" onclick="go('packages')">← Буцах</button><div class="badge">Step 2 / 3</div></div>
+  <div class="sectionTitle"><div class="eyebrow">Payment</div><h2 id="payTitle">Package</h2><p id="payPrice"></p></div>
+  <div class="paymentGrid">
+    <div class="card">
+      <div class="qpayHead"><h3>Дансаар төлөх</h3><span class="paymentStatus" id="paymentStatus">Хүлээгдэж байна</span></div>
+      <div class="bankHero"><div class="bankIcon">🏦</div><div><strong>Банкны шилжүүлэг</strong><span>Доорх данс руу яг заасан дүнгээр шилжүүлнэ.</span></div></div>
+      <p class="info" id="paymentInfo">Гүйлгээний утгыг доорх кодоор яг зөв бичээрэй.</p>
+      <div class="paymentDetails">
+        <div class="paymentDetail"><span>Хүлээн авагч</span><div class="paymentValue"><strong id="bankRecipient">Хайпэй ХХК</strong><button class="copyMini" onclick="copyPaymentValue('bankRecipient','Хүлээн авагч')">Хуулах</button></div></div>
+        <div class="paymentDetail"><span>IBAN дугаар</span><div class="paymentValue"><code id="bankIban">MN040051510099606084</code><button class="copyMini" onclick="copyPaymentValue('bankIban','IBAN')">Хуулах</button></div></div>
+        <div class="paymentDetail"><span>Данс эзэмшигч</span><div class="paymentValue"><strong id="bankOwner">Элбэгбаяр Болдбаатар</strong><button class="copyMini" onclick="copyPaymentValue('bankOwner','Данс эзэмшигч')">Хуулах</button></div></div>
+        <div class="paymentDetail"><span>Төлөх дүн</span><div class="paymentValue"><strong id="qpayAmount">0₮</strong><button class="copyMini" onclick="copyPaymentValue('qpayAmount','Төлөх дүн')">Хуулах</button></div></div>
+        <div class="paymentDetail"><span>Гүйлгээний утга</span><div class="paymentValue"><code id="paymentReference">—</code><button class="copyMini" onclick="copyPaymentValue('paymentReference','Гүйлгээний утга')">Хуулах</button></div></div>
       </div>
-
-      <div class="card">
-        <h3>Activation</h3>
-
-        <input
-          id="code"
-          class="field"
-          placeholder="Activation code">
-
-        <button
-          class="btn"
-          style="width:100%"
-          onclick="activate()">
-          Code баталгаажуулах
-        </button>
-
-        <div class="notice">
-          Demo code: <b>BDAY-DEMO</b>
-        </div>
-      </div>
-
+      <button class="btn" style="width:100%" id="verifyPaymentBtn" onclick="verifyPayment()">✓ Төлбөр баталгаажуулах</button>
+      <div class="verifyResult" id="paymentVerifyResult"></div>
     </div>
+    <div class="card"><h3>Activation</h3><input id="code" class="field" placeholder="Төлбөрийн дараа авсан code"><button class="btn" style="width:100%" onclick="activate()">Code баталгаажуулах</button><div class="purchaseReminder">⚠️ <b>1 code = 1 website.</b><br>Code-оо нэг удаа ашигласны дараа дахин өөр website-д ашиглах боломжгүй.</div></div>
   </div>
+</div>
 </section>
-
-<!-- BUILDER -->
 
 <section class="page" id="builder">
-  <div class="shell">
+<div class="shell">
+  <div class="topbar"><button class="back" onclick="go('home')">← Нүүр</button><div class="badge" id="activePkg">Demo</div></div>
+  <div class="builderGrid">
+    <div class="card controls">
+      <h3>Customize your website</h3>
+      <input id="bName" class="field" placeholder="Нэр" value="Someone Special" oninput="syncPreview()">
+      <input id="bDate" class="field" type="date">
+      <div class="featureLabel"><span>Мэндчилгээний төрөл</span><span class="tag">Өөрөө сонгоно</span></div>
+      <select id="occasionSelect" class="field" onchange="applyOccasion()">
+        <option value="birthday">🎂 Төрсөн өдөр</option>
+        <option value="anniversary">💞 Ойн баяр</option>
+        <option value="love">❤️ Хайрын мэндчилгээ</option>
+        <option value="congratulations">🏆 Баяр хүргэлт</option>
+        <option value="thankyou">💐 Талархал</option>
+        <option value="apology">💌 Уучлал</option>
+        <option value="custom">✨ Өөрийн custom мэндчилгээ</option>
+      </select>
+      <div class="featureLabel"><span>Opening line</span><span class="tag">Editable</span></div>
+      <input id="bOpening" class="field" value="A little birthday surprise for" oninput="syncPreview()">
+      <div class="featureLabel"><span>Headline</span><span class="tag">All plans</span></div>
+      <input id="bHeadline" class="field" value="Your Special Day" oninput="syncPreview()">
 
-    <div class="topbar">
-      <button class="back" onclick="go('home')">← Нүүр</button>
-      <div class="badge" id="activePkg">Demo</div>
+      <div class="featureLabel"><span>Surprise visual</span><span class="tag">Өөрийн хүссэнээр</span></div>
+      <div class="surpriseChoices" id="surpriseChoices">
+        <button type="button" class="surpriseChoice active" onclick="chooseSurprise('🎁',this)" title="Бэлэг">🎁</button>
+        <button type="button" class="surpriseChoice" onclick="chooseSurprise('💌',this)" title="Захидал">💌</button>
+        <button type="button" class="surpriseChoice" onclick="chooseSurprise('🎂',this)" title="Торт">🎂</button>
+        <button type="button" class="surpriseChoice" onclick="chooseSurprise('🎈',this)" title="Бөмбөлөг">🎈</button>
+        <button type="button" class="surpriseChoice" onclick="chooseSurprise('💐',this)" title="Цэцэг">💐</button>
+        <button type="button" class="surpriseChoice" onclick="chooseSurprise('🧸',this)" title="Тоглоом">🧸</button>
+      </div>
+      <div class="customVisualRow">
+        <input id="customSurprise" class="field" maxlength="8" placeholder="Өөрийн emoji ✨" oninput="useCustomSurprise()">
+        <label class="field uploadVisual">Өөрийн PNG / JPG / GIF<input id="surpriseImage" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden onchange="loadSurpriseImage()"></label>
+      </div>
+      <div id="surpriseMsg" class="notice">Зураг оруулбал бэлгийн дүрсний оронд таны зураг гарна.</div>
+      <div class="featureLabel"><span>Letter</span><span class="tag">All plans</span></div>
+      <textarea id="bLetter" class="field" oninput="syncPreview()">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</textarea>
+      <div class="featureLabel"><span>Final heading</span><span class="tag">Editable</span></div>
+      <input id="bFinalTitle" class="field" value="Happy Birthday ♡" oninput="syncPreview()">
+
+      <div id="colorFeature">
+        <div class="featureLabel"><span>Custom colors</span><span class="tag">Premium+</span></div>
+        <div class="colorRow"><input type="color" id="c1" value="#4b1830" oninput="syncPreview()"><input type="color" id="c2" value="#170b12" oninput="syncPreview()"></div>
+      </div>
+
+      <div id="fontFeature">
+        <div class="featureLabel"><span>Font style</span><span class="tag">Premium+</span></div>
+        <select id="fontSelect" class="field" onchange="syncPreview()">
+          <option value="Georgia,serif">Elegant Serif</option>
+          <option value="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">Modern</option>
+          <option value="'Times New Roman',serif">Classic</option>
+        </select>
+      </div>
+
+      <div class="featureLabel"><span>Photos</span><span class="tag" id="photoLimitTag">6 max</span></div>
+      <input id="photos" class="field" type="file" accept="image/*" multiple onchange="loadPhotos()">
+      <div id="photoMsg" class="notice"></div>
+
+      <div id="videoFeature">
+        <div class="featureLabel"><span>Video</span><span class="tag">Premium+</span></div>
+        <input id="video" class="field" type="file" accept="video/*" onchange="loadVideo()">
+      </div>
+
+      <div id="extraFeature">
+        <div class="featureLabel"><span>Extra section</span><span class="tag">Advanced</span></div>
+        <textarea id="extraText" class="field" placeholder="Extra message..." oninput="syncPreview()"></textarea>
+      </div>
+
+      <div class="lockbar">
+        <div class="builderAccessNotice" id="builderAccessNotice">Төлбөрийн эрх шалгаж байна...</div>
+        <button class="btn secondary small" id="saveDraftBtn" onclick="saveDraft()">Save draft</button>
+        <button class="btn secondary small" onclick="openViewer()">👁 Preview Website</button>
+        <button class="btn small" id="finalizeBtn" onclick="fakeFinalize()">Finalize + Link</button>
+      </div>
+      <div class="notice" id="finalMsg"></div>
     </div>
 
-    <div class="builderGrid">
-
-      <div class="card controls">
-
-        <h3>Customize your website</h3>
-
-        <input
-          id="bName"
-          class="field"
-          placeholder="Нэр"
-          value="Someone Special"
-          oninput="syncPreview()">
-
-        <input
-          id="bDate"
-          class="field"
-          type="date">
-
-        <div class="featureLabel">
-          <span>Headline</span>
-          <span class="tag">All plans</span>
-        </div>
-
-        <input
-          id="bHeadline"
-          class="field"
-          value="Your Special Day"
-          oninput="syncPreview()">
-
-        <div class="featureLabel">
-          <span>Letter</span>
-          <span class="tag">All plans</span>
-        </div>
-
-        <textarea
-          id="bLetter"
-          class="field"
-          oninput="syncPreview()">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</textarea>
-
-        <div id="colorFeature">
-          <div class="featureLabel">
-            <span>Custom colors</span>
-            <span class="tag">Premium+</span>
-          </div>
-
-          <div class="colorRow">
-            <input
-              type="color"
-              id="c1"
-              value="#4b1830"
-              oninput="syncPreview()">
-
-            <input
-              type="color"
-              id="c2"
-              value="#170b12"
-              oninput="syncPreview()">
-          </div>
-        </div>
-
-        <div id="fontFeature">
-          <div class="featureLabel">
-            <span>Font style</span>
-            <span class="tag">Premium+</span>
-          </div>
-
-          <select
-            id="fontSelect"
-            class="field"
-            onchange="syncPreview()">
-
-            <option value="Georgia,serif">
-              Elegant Serif
-            </option>
-
-            <option value="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-              Modern
-            </option>
-
-            <option value="'Times New Roman',serif">
-              Classic
-            </option>
-          </select>
-        </div>
-
-        <div class="featureLabel">
-          <span>Photos</span>
-          <span class="tag" id="photoLimitTag">6 max</span>
-        </div>
-
-        <input
-          id="photos"
-          class="field"
-          type="file"
-          accept="image/*"
-          multiple
-          onchange="loadPhotos()">
-
-        <div id="photoMsg" class="notice"></div>
-
-        <div id="videoFeature">
-          <div class="featureLabel">
-            <span>Video</span>
-            <span class="tag">Premium+</span>
-          </div>
-
-          <input
-            id="video"
-            class="field"
-            type="file"
-            accept="video/*"
-            onchange="loadVideo()">
-        </div>
-
-        <div id="extraFeature">
-          <div class="featureLabel">
-            <span>Extra section</span>
-            <span class="tag">Advanced</span>
-          </div>
-
-          <textarea
-            id="extraText"
-            class="field"
-            placeholder="Extra message..."
-            oninput="syncPreview()"></textarea>
-        </div>
-
-        <div class="lockbar">
-          <span class="pill">Preview mode</span>
-
-          <button
-            class="btn secondary small"
-            onclick="openViewer()">
-            👁 Preview Website
-          </button>
-
-          <button
-            class="btn small"
-            onclick="fakeFinalize()">
-            Finalize
-          </button>
-        </div>
-
-        <div class="notice" id="finalMsg"></div>
-
+    <div class="previewPhone">
+      <div class="previewInner" id="preview">
+        <div class="eyebrow">✦ <span id="pvOpening">A little birthday surprise for</span> <span id="pvName">Someone Special</span> ✦</div>
+        <div class="previewGift" id="pvSurprise">🎁</div>
+        <h2 id="pvHeadline">Your Special Day</h2>
+        <p id="pvLetter">Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨</p>
+        <div class="previewGallery" id="gallery"><div class="ph">Photo 1</div><div class="ph">Photo 2</div><div class="ph">Photo 3</div><div class="ph">Photo 4</div></div>
+        <video id="pvVideo" class="videoPreview" controls playsinline></video>
+        <p id="pvExtra" class="hidden"></p>
       </div>
+    </div>
+  </div>
+</div>
+</section>
 
-      <!-- LIVE PREVIEW -->
-
-      <div class="previewPhone">
-        <div class="previewInner" id="preview">
-
-          <div class="eyebrow">
-            ✦ A little surprise for
-            <span id="pvName">Someone Special</span> ✦
-          </div>
-
-          <div class="previewGift">🎁</div>
-
-          <h2 id="pvHeadline">Your Special Day</h2>
-
-          <p id="pvLetter">
-            Happy Birthday! Шинэ нас чинь аз жаргал,
-            гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨
-          </p>
-
-          <div class="previewGallery" id="gallery">
-            <div class="ph">Photo 1</div>
-            <div class="ph">Photo 2</div>
-            <div class="ph">Photo 3</div>
-            <div class="ph">Photo 4</div>
-          </div>
-
-          <video
-            id="pvVideo"
-            class="videoPreview"
-            controls
-            playsinline>
-          </video>
-
-          <p id="pvExtra" class="hidden"></p>
-
+<section class="page" id="authPage">
+  <div class="shell">
+    <div class="topbar"><button class="back" onclick="pendingAction=null;go('home')">← Нүүр</button><div class="badge">USER ACCOUNT</div></div>
+    <div class="authWrap">
+      <div class="card authCard">
+        <div class="eyebrow" style="text-align:center">Wish Studio members</div>
+        <h2>Тавтай морил</h2>
+        <p class="info">Утасны дугаараараа нэвтэрч өөрийн мэндчилгээнүүдээ хадгалж, удирдаарай.</p>
+        <div class="authTabs"><button class="authTab active" id="loginTab" onclick="showAuthMode('login')">Нэвтрэх</button><button class="authTab" id="registerTab" onclick="showAuthMode('register')">Бүртгүүлэх</button></div>
+        <div class="authForm active" id="loginForm">
+          <input id="loginPhone" class="field" inputmode="numeric" maxlength="8" placeholder="Утасны дугаар">
+          <input id="loginPin" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 оронтой PIN" onkeydown="if(event.key==='Enter')userLogin()">
+          <button class="btn" style="width:100%" onclick="userLogin()">Нэвтрэх →</button>
         </div>
+        <div class="authForm" id="registerForm">
+          <input id="registerName" class="field" maxlength="40" placeholder="Таны нэр">
+          <input id="registerPhone" class="field" inputmode="numeric" maxlength="8" placeholder="Утасны дугаар">
+          <p class="phoneHint">Монголын 8 оронтой дугаар оруулна.</p>
+          <input id="registerPin" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="Шинэ 4–6 оронтой PIN">
+          <input id="registerPinAgain" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="PIN давтах">
+          <button class="btn" style="width:100%" onclick="userRegister()">Account үүсгэх →</button>
+        </div>
+        <p class="authError" id="authError"></p>
+        <p class="notice" style="text-align:center">Demo: SMS илгээхгүй. PIN нь зөвхөн энэ browser дээр хадгалагдана.</p>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- БҮТЭН PREVIEW -->
+<section class="page" id="userPage">
+  <div class="shell">
+    <div class="topbar"><div class="brand">Wish Studio <span style="color:var(--accent)">Account</span></div><div class="topActions"><button class="adminLink" onclick="go('home')">Website</button><button class="adminLink" onclick="userLogout()">Гарах</button></div></div>
+    <div class="userHeader"><div><div class="eyebrow">My greeting space</div><h2 id="userWelcome">Сайн байна уу</h2><p id="userPhoneLabel"></p></div><div class="topActions"><button class="btn secondary hidden" id="resumePaymentBtn" onclick="resumePayment()">💳 Төлбөр шалгах</button><button class="btn" onclick="startNewGreeting()">＋ Шинэ мэндчилгээ</button></div></div>
+    <div class="userProjectGrid" id="userProjectGrid"></div>
+  </div>
+</section>
+
+<section class="page" id="adminLoginPage">
+  <div class="shell">
+    <div class="topbar"><button class="back" onclick="go('home')">← Нүүр</button><div class="badge">ADMIN ACCESS</div></div>
+    <div class="adminLoginWrap">
+      <div class="card adminLoginCard">
+        <div class="adminLoginIcon">⌁</div>
+        <div class="eyebrow">Wish Studio control room</div>
+        <h2>Admin нэвтрэх</h2>
+        <p class="info">Захиалга, activation code болон нийтэлсэн мэндчилгээнүүдээ удирдана.</p>
+        <input id="adminUsername" class="field" inputmode="numeric" placeholder="Admin username">
+        <input id="adminPassword" class="field" type="password" inputmode="numeric" maxlength="4" placeholder="4 оронтой admin code" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="btn" style="width:100%" onclick="adminLogin()">Нэвтрэх →</button>
+        <p class="adminError" id="adminError"></p>
+        <p class="notice">Username: <b>99606084</b><br>Admin code: <b>0820</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="adminPage">
+  <div class="adminShell">
+    <div class="topbar"><div class="brand">Wish Studio <span style="color:var(--accent)">Admin</span></div><div class="topActions"><button class="adminLink" onclick="go('home')">Website</button><button class="adminLink" onclick="adminLogout()">Гарах</button></div></div>
+    <div class="adminHeader">
+      <div><div class="eyebrow">Control room · local demo</div><h2>Dashboard</h2><p>Мэндчилгээ, захиалга, эрхийн кодоо нэг дороос удирдана.</p></div>
+      <div class="adminHeaderActions"><button class="btn secondary small" onclick="exportAdminData()">↓ JSON export</button><button class="btn small" onclick="adminNewGreeting()">＋ New greeting</button></div>
+    </div>
+    <div class="statsGrid">
+      <div class="statCard"><span>Нийт захиалга</span><strong id="statTotal">0</strong></div>
+      <div class="statCard"><span>Нийтэлсэн</span><strong id="statPublished">0</strong></div>
+      <div class="statCard"><span>Draft</span><strong id="statDraft">0</strong></div>
+      <div class="statCard"><span>Орлого</span><strong id="statRevenue">0₮</strong></div>
+      <div class="statCard"><span>Хэрэглэгч</span><strong id="statUsers">0</strong></div>
+    </div>
+    <section class="adminPanel siteSettingsPanel">
+      <div class="adminPanelHead"><div><h3>Банкны төлбөрүүд</h3><p class="info" style="margin:5px 0 0">Орж ирсэн шилжүүлгийг шалгаад “Төлөгдсөн” болгоно.</p></div><span class="badge" id="paymentCountBadge">0 payments</span></div>
+      <div class="paymentAdminList" id="adminPaymentList"></div>
+    </section>
+    <section class="adminPanel siteSettingsPanel">
+      <div class="adminPanelHead"><div><h3>Website тохиргоо</h3><p class="info" style="margin:5px 0 0">Нүүр хуудасны текст, багцын үнэ, төлбөрийн мэдээллээ эндээс засна.</p></div><span class="badge">LIVE CONTENT</span></div>
+      <div class="siteSettingsGrid">
+        <label class="settingField">Brand нэр<input id="settingBrand" class="field" maxlength="40"></label>
+        <label class="settingField">Жижиг гарчиг<input id="settingEyebrow" class="field" maxlength="70"></label>
+        <label class="settingField">Үндсэн гарчиг<input id="settingHeadline" class="field" maxlength="80"></label>
+        <label class="settingField full">Танилцуулга<textarea id="settingIntro" class="field" maxlength="300"></textarea></label>
+        <label class="settingField">Normal үнэ<input id="settingNormalPrice" class="field" type="number" min="0" step="100"></label>
+        <label class="settingField">Premium үнэ<input id="settingPremiumPrice" class="field" type="number" min="0" step="100"></label>
+        <label class="settingField">Advanced үнэ<input id="settingAdvancedPrice" class="field" type="number" min="0" step="100"></label>
+        <label class="settingField">Normal тайлбар<input id="settingNormalSub" class="field" maxlength="50"></label>
+        <label class="settingField">Premium тайлбар<input id="settingPremiumSub" class="field" maxlength="50"></label>
+        <label class="settingField">Advanced тайлбар<input id="settingAdvancedSub" class="field" maxlength="50"></label>
+        <label class="settingField">Normal багцын мэдээлэл<textarea id="settingNormalFeatures" class="field" maxlength="300" placeholder="Нэг мөрөнд нэг feature"></textarea></label>
+        <label class="settingField">Premium багцын мэдээлэл<textarea id="settingPremiumFeatures" class="field" maxlength="300" placeholder="Нэг мөрөнд нэг feature"></textarea></label>
+        <label class="settingField">Advanced багцын мэдээлэл<textarea id="settingAdvancedFeatures" class="field" maxlength="300" placeholder="Нэг мөрөнд нэг feature"></textarea></label>
+        <label class="settingField">Хүлээн авагч<input id="settingBankRecipient" class="field" maxlength="80"></label>
+        <label class="settingField">IBAN дугаар<input id="settingBankIban" class="field" maxlength="34"></label>
+        <label class="settingField">Данс эзэмшигч<input id="settingBankOwner" class="field" maxlength="80"></label>
+        <label class="settingField full">Төлбөрийн тайлбар<textarea id="settingPaymentInfo" class="field" maxlength="240"></textarea></label>
+      </div>
+      <div class="settingsSaveRow"><span class="settingsMessage" id="settingsMessage"></span><button class="btn small" onclick="saveSiteSettings()">Өөрчлөлт хадгалах ✓</button></div>
+    </section>
+    <div class="adminGrid">
+      <section class="adminPanel">
+        <div class="adminPanelHead"><h3>Мэндчилгээний захиалгууд</h3><span class="badge" id="orderCountBadge">0 items</span></div>
+        <div class="adminToolbar"><input id="adminSearch" class="field" placeholder="Нэр, ID, төрлөөр хайх..." oninput="renderAdmin()"><select id="adminStatusFilter" class="field" onchange="renderAdmin()"><option value="all">Бүх статус</option><option value="draft">Draft</option><option value="published">Published</option><option value="archived">Archived</option></select></div>
+        <div class="orderList" id="adminOrderList"></div>
+      </section>
+      <aside>
+        <section class="adminPanel">
+          <div class="adminPanelHead"><h3>Activation codes</h3><span class="badge" id="codeCountBadge">0 active</span></div>
+          <div class="codeCreate"><select id="codePlan" class="field"><option>Normal</option><option selected>Premium</option><option>Advanced</option></select><button class="btn small" onclick="generateActivationCode()">＋ Code</button></div>
+          <div class="codeList" id="adminCodeList"></div>
+        </section>
+        <section class="adminPanel" style="margin-top:16px">
+          <div class="adminPanelHead"><h3>Хэрэглэгчид</h3><span class="badge" id="userCountBadge">0 users</span></div>
+          <div class="userList" id="adminUserList"></div>
+        </section>
+        <div class="adminNote"><b>Local admin demo</b><br>Энд хадгалсан мэдээлэл зөвхөн энэ browser дээр үлдэнэ. Жинхэнэ олон хэрэглэгчтэй хувилбарт database, login болон file storage backend холбоно.</div>
+      </aside>
+    </div>
+  </div>
+</section>
 
 <section class="page" id="viewer">
-
   <div class="viewerTop">
-    <button
-      class="btn secondary small"
-      onclick="go('builder')">
-      ← Builder
-    </button>
-
-    <div class="viewerCount" id="viewerCount">
-      1 / 4
-    </div>
+    <button class="btn secondary small" onclick="go('builder')">← Builder</button>
+    <div class="viewerCount" id="viewerCount">1 / 4</div>
   </div>
 
   <div class="viewerScreen active" id="vs1">
     <div class="viewerContent">
-
-      <div class="eyebrow">
-        ✦ Something special for
-        <span class="vName">Someone Special</span> ✦
-      </div>
-
-      <div class="viewerGift">🎁</div>
-
+      <div class="eyebrow">✦ <span id="vOpening">A little birthday surprise for</span> <span class="vName">Someone Special</span> ✦</div>
+      <div class="viewerGift" id="viewerSurprise" role="button" tabindex="0" aria-label="Зурган дээр дарж бэлгийг нээх" onclick="openSurprise()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openSurprise()}">🎁</div>
       <h2 id="vHeadline1">Your Special Day</h2>
-
-      <p>Tap next to open the surprise.</p>
-
-      <div class="viewerNav">
-        <button class="btn" onclick="viewerGo(2)">
-          Open Gift →
-        </button>
-      </div>
-
+      <p class="clickHint">Зурган дээр дарж нээгээрэй ✦</p>
     </div>
   </div>
 
   <div class="viewerScreen" id="vs2">
     <div class="viewerContent">
-
-      <div class="eyebrow">
-        ✦ A letter just for you ✦
+      <div class="letterScene" id="letterScene">
+        <div class="envelopeWrap">
+          <button type="button" class="envelopeButton" onclick="openLetter()" aria-label="Захидлын дугтуйг нээх"><span class="envelopeHeart">♡</span></button>
+          <span class="envelopeHint">Дугтуйн дээр дарж захиагаа уншаарай ✦</span>
+        </div>
+        <article class="letterPaper" id="letterPaper">
+          <div class="eyebrow">✦ A letter just for you ✦</div>
+          <h2 id="vHeadline2">Your Special Day</h2>
+          <p id="vLetter">Happy Birthday!</p>
+          <div class="viewerNav"><button class="btn secondary" onclick="viewerGo(1)">← Back</button><button class="btn" onclick="viewerGo(3)">Memories →</button></div>
+        </article>
       </div>
-
-      <h2 id="vHeadline2">Your Special Day</h2>
-
-      <p id="vLetter">Happy Birthday!</p>
-
-      <div class="viewerNav">
-        <button
-          class="btn secondary"
-          onclick="viewerGo(1)">
-          ← Back
-        </button>
-
-        <button
-          class="btn"
-          onclick="viewerGo(3)">
-          Memories →
-        </button>
-      </div>
-
     </div>
   </div>
 
   <div class="viewerScreen" id="vs3">
     <div class="viewerContent">
-
-      <div class="eyebrow">
-        ✦ Every moment captured ✦
-      </div>
-
+      <div class="eyebrow">✦ Every moment captured ✦</div>
       <h2>Our Memories</h2>
-
-      <div
-        class="viewerGallery"
-        id="viewerGallery">
-      </div>
-
-      <video
-        id="viewerVideo"
-        class="viewerVideo"
-        controls
-        playsinline>
-      </video>
-
-      <div class="viewerNav">
-        <button
-          class="btn secondary"
-          onclick="viewerGo(2)">
-          ← Back
-        </button>
-
-        <button
-          class="btn"
-          onclick="viewerGo(4)">
-          Next →
-        </button>
-      </div>
-
+      <div class="viewerGallery" id="viewerGallery"></div>
+      <video id="viewerVideo" class="viewerVideo" controls playsinline></video>
+      <div class="viewerNav"><button class="btn secondary" onclick="viewerGo(2)">← Back</button><button class="btn" onclick="viewerGo(4)">Next →</button></div>
     </div>
   </div>
 
   <div class="viewerScreen" id="vs4">
     <div class="viewerContent">
-
-      <div class="eyebrow">
-        ✦ One final wish ✦
-      </div>
-
-      <h2>Happy Birthday ♡</h2>
-
-      <p id="vExtra">
-        May this new chapter be full of happiness
-        and beautiful memories.
-      </p>
-
-      <div class="viewerNav">
-        <button
-          class="btn secondary"
-          onclick="viewerGo(3)">
-          ← Back
-        </button>
-
-        <button
-          class="btn"
-          onclick="go('builder')">
-          Done ✓
-        </button>
-      </div>
-
+      <div class="eyebrow">✦ One final wish ✦</div>
+      <h2 id="vFinalTitle">Happy Birthday ♡</h2>
+      <p id="vExtra">May this new chapter be full of happiness and beautiful memories.</p>
+      <div class="viewerNav"><button class="btn secondary" onclick="viewerGo(3)">← Back</button><button class="btn" onclick="go('builder')">Done ✓</button></div>
     </div>
   </div>
 
+  <div class="memoryLightbox" id="memoryLightbox" onclick="if(event.target===this)closeMemory()" role="dialog" aria-modal="true" aria-label="Дурсамжийн зураг">
+    <button class="lightboxClose" onclick="closeMemory()" aria-label="Хаах">×</button>
+    <button class="lightboxArrow prev" onclick="memoryStep(-1)" aria-label="Өмнөх зураг">‹</button>
+    <img id="lightboxImage" alt="Дурсамжийн том зураг">
+    <button class="lightboxArrow next" onclick="memoryStep(1)" aria-label="Дараагийн зураг">›</button>
+    <div class="lightboxCount" id="lightboxCount">1 / 1</div>
+  </div>
 </section>
 
 </div>
 
 <script>
-let selectedPackage = "Demo";
-let photoLimit = 6;
-let allowVideo = false;
-let allowColors = false;
-let allowExtra = false;
-let objectUrls = [];
+let selectedPackage='Demo', photoLimit=6, allowVideo=false, allowColors=false, allowExtra=false;
+let objectUrls=[];
+let selectedSurprise='🎁', surpriseImageUrl='';
+const ADMIN_STORAGE_KEY='wishStudioAdminV5';
+const AUTH_STORAGE_KEY='wishStudioAuthV5';
+const DEFAULT_SITE_SETTINGS={
+  brand:'Wish Studio ✦',
+  eyebrow:'A personalized digital gift',
+  headline:'Make Their\nDay Special',
+  intro:'Төрсөн өдөр, ойн баяр, хайр, баяр хүргэлт, талархал зэрэг хүссэн мэндчилгээгээ зураг, видео, захиа, theme-тэй тусгай website болгоорой.',
+  normalPrice:19900,premiumPrice:34900,advancedPrice:49900,
+  normalSub:'Simple & sweet',premiumSub:'Most popular',advancedSub:'Full experience',
+  normalFeatures:'6 зураг\nНэр + захиа\nCountdown\nFixed theme\nUnique link',
+  premiumFeatures:'15 зураг\n1 видео\nCustom өнгө\nCustom текст\nPremium animation',
+  advancedFeatures:'30 зураг\n2 видео\nCustom theme\nExtra sections\nAdvanced effects',
+  bankRecipient:'Хайпэй ХХК',bankIban:'MN040051510099606084',bankOwner:'Элбэгбаяр Болдбаатар',
+  paymentInfo:'Доорх данс руу яг заасан дүнгээр шилжүүлээд, гүйлгээний утгыг доорх кодоор зөв бичээрэй.'
+};
+const planPrices={Normal:19900,Premium:34900,Advanced:49900,Demo:0};
+let editingProjectId=null;
+let builderOwnerOverride=null;
+let activePurchaseCode=null;
+let adminData=loadAdminData();
+let authData=loadAuthData();
+let pendingAction=null;
+let currentPaymentId=sessionStorage.getItem('wishStudioPaymentId')||null;
 
-function go(id){
-  document
-    .querySelectorAll(".page")
-    .forEach(page => page.classList.remove("active"));
+function loadAdminData(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(ADMIN_STORAGE_KEY));
+    if(saved&&Array.isArray(saved.projects)&&Array.isArray(saved.codes)){
+      const oldPaymentInfo=saved.settings?.paymentInfo;
+      saved.settings={...DEFAULT_SITE_SETTINGS,...(saved.settings||{})};
+      if(oldPaymentInfo==='Энд жинхэнэ QR дараагийн шатанд орно.'||oldPaymentInfo?.startsWith('QPay эсвэл банкны апп-аараа'))saved.settings.paymentInfo=DEFAULT_SITE_SETTINGS.paymentInfo;
+      if(!Array.isArray(saved.payments))saved.payments=[];
+      return saved;
+    }
+  }catch(error){}
+  return {projects:[],codes:[],payments:[],settings:{...DEFAULT_SITE_SETTINGS}};
+}
+function saveAdminData(){localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify(adminData))}
+function loadAuthData(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(AUTH_STORAGE_KEY));
+    if(saved&&Array.isArray(saved.users))return saved;
+  }catch(error){}
+  return {users:[]};
+}
+function saveAuthData(){localStorage.setItem(AUTH_STORAGE_KEY,JSON.stringify(authData))}
+function makeId(prefix){return prefix+'-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase()}
+function escapeHtml(value){return String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]))}
 
-  document
-    .getElementById(id)
-    .classList.add("active");
+function normalizePhone(value){return String(value||'').replace(/\D/g,'').slice(-8)}
+async function hashPin(pin){
+  if(window.crypto&&crypto.subtle){
+    const bytes=new TextEncoder().encode('wish-studio-v5:'+pin);
+    const digest=await crypto.subtle.digest('SHA-256',bytes);
+    return Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('');
+  }
+  let hash=2166136261;
+  for(const char of 'wish-studio-v5:'+pin){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}
+  return 'local-'+(hash>>>0).toString(16);
+}
+function currentUser(){
+  const phone=sessionStorage.getItem('wishStudioUser');
+  return phone?authData.users.find(user=>user.phone===phone)||null:null;
+}
+function refreshAccountButton(){
+  const button=document.getElementById('accountButton');if(!button)return;
+  const user=currentUser();button.textContent=user?(user.name||user.phone):'Нэвтрэх';
+}
+function showAuthMode(mode){
+  const login=mode==='login';
+  document.getElementById('loginTab').classList.toggle('active',login);
+  document.getElementById('registerTab').classList.toggle('active',!login);
+  document.getElementById('loginForm').classList.toggle('active',login);
+  document.getElementById('registerForm').classList.toggle('active',!login);
+  document.getElementById('authError').textContent='';
+}
+function openAccount(){
+  if(sessionStorage.getItem('wishStudioAdmin')==='yes'){renderAdmin();go('adminPage');return}
+  if(currentUser()){renderUserDashboard();go('userPage');return}
+  showAuthMode('login');go('authPage');
+}
+function completeUserLogin(user){
+  sessionStorage.setItem('wishStudioUser',user.phone);refreshAccountButton();
+  const action=pendingAction;pendingAction=null;
+  if(action?.type==='choose'){choose(action.pkg,action.price);return}
+  if(action?.type==='demo'){demoBuilder();return}
+  if(action?.type==='guide'){go('packages');return}
+  renderUserDashboard();go('userPage');
+}
+async function userRegister(){
+  const error=document.getElementById('authError');error.textContent='';
+  const name=document.getElementById('registerName').value.trim();
+  const phone=normalizePhone(document.getElementById('registerPhone').value);
+  const pin=document.getElementById('registerPin').value;
+  const again=document.getElementById('registerPinAgain').value;
+  if(name.length<2){error.textContent='Нэрээ бүтнээр нь оруулна уу.';return}
+  if(!/^\d{8}$/.test(phone)){error.textContent='8 оронтой утасны дугаар оруулна уу.';return}
+  if(phone==='99606084'){error.textContent='Энэ дугаар admin-д зориулагдсан.';return}
+  if(!/^\d{4,6}$/.test(pin)){error.textContent='PIN 4–6 оронтой тоо байна.';return}
+  if(pin!==again){error.textContent='Давтан оруулсан PIN таарахгүй байна.';return}
+  if(authData.users.some(user=>user.phone===phone)){error.textContent='Энэ дугаараар account үүссэн байна. Нэвтрэх хэсгийг ашиглана уу.';return}
+  const user={id:makeId('USR'),name,phone,pinHash:await hashPin(pin),createdAt:new Date().toISOString()};
+  authData.users.unshift(user);saveAuthData();completeUserLogin(user);
+}
+async function userLogin(){
+  const error=document.getElementById('authError');error.textContent='';
+  const phone=normalizePhone(document.getElementById('loginPhone').value);
+  const pin=document.getElementById('loginPin').value;
+  if(phone==='99606084'){
+    if(pin!=='0820'){error.textContent='Admin code буруу байна.';return}
+    pendingAction=null;sessionStorage.removeItem('wishStudioUser');sessionStorage.setItem('wishStudioAdmin','yes');sessionStorage.setItem('wishStudioAdminName',phone);
+    refreshAccountButton();renderAdmin();go('adminPage');return;
+  }
+  const user=authData.users.find(item=>item.phone===phone);
+  if(!user||user.pinHash!==await hashPin(pin)){error.textContent='Утасны дугаар эсвэл PIN буруу байна.';return}
+  user.lastLoginAt=new Date().toISOString();saveAuthData();completeUserLogin(user);
+}
+function userLogout(){sessionStorage.removeItem('wishStudioUser');refreshAccountButton();go('home')}
+
+function applySiteSettings(){
+  const settings=adminData.settings={...DEFAULT_SITE_SETTINGS,...(adminData.settings||{})};
+  planPrices.Normal=Math.max(0,Number(settings.normalPrice)||0);
+  planPrices.Premium=Math.max(0,Number(settings.premiumPrice)||0);
+  planPrices.Advanced=Math.max(0,Number(settings.advancedPrice)||0);
+  document.getElementById('homeBrand').textContent=settings.brand;
+  document.getElementById('homeEyebrow').textContent=settings.eyebrow;
+  document.getElementById('homeHeadline').textContent=settings.headline;
+  document.getElementById('homeIntro').textContent=settings.intro;
+  document.getElementById('normalPrice').textContent=planPrices.Normal.toLocaleString()+'₮';
+  document.getElementById('premiumPrice').textContent=planPrices.Premium.toLocaleString()+'₮';
+  document.getElementById('advancedPrice').textContent=planPrices.Advanced.toLocaleString()+'₮';
+  document.getElementById('normalSub').textContent=settings.normalSub;
+  document.getElementById('premiumSub').textContent=settings.premiumSub;
+  document.getElementById('advancedSub').textContent=settings.advancedSub;
+  renderPackageFeatures('normalFeatures',settings.normalFeatures);
+  renderPackageFeatures('premiumFeatures',settings.premiumFeatures);
+  renderPackageFeatures('advancedFeatures',settings.advancedFeatures);
+  document.getElementById('bankRecipient').textContent=settings.bankRecipient;
+  document.getElementById('bankIban').textContent=settings.bankIban;
+  document.getElementById('bankOwner').textContent=settings.bankOwner;
+  document.getElementById('paymentInfo').textContent=settings.paymentInfo;
+}
+function renderPackageFeatures(id,value){
+  const list=document.getElementById(id);list.innerHTML='';
+  String(value||'').split(/\r?\n/).map(item=>item.trim()).filter(Boolean).slice(0,8).forEach(text=>{const li=document.createElement('li');li.textContent=text;list.appendChild(li)});
+}
+function fillSiteSettingsForm(){
+  const settings=adminData.settings;
+  const values={settingBrand:settings.brand,settingEyebrow:settings.eyebrow,settingHeadline:settings.headline,settingIntro:settings.intro,settingNormalPrice:settings.normalPrice,settingPremiumPrice:settings.premiumPrice,settingAdvancedPrice:settings.advancedPrice,settingNormalSub:settings.normalSub,settingPremiumSub:settings.premiumSub,settingAdvancedSub:settings.advancedSub,settingNormalFeatures:settings.normalFeatures,settingPremiumFeatures:settings.premiumFeatures,settingAdvancedFeatures:settings.advancedFeatures,settingBankRecipient:settings.bankRecipient,settingBankIban:settings.bankIban,settingBankOwner:settings.bankOwner,settingPaymentInfo:settings.paymentInfo};
+  Object.entries(values).forEach(([id,value])=>{const field=document.getElementById(id);if(field)field.value=value??''});
+}
+function saveSiteSettings(){
+  const message=document.getElementById('settingsMessage');
+  const normalPrice=Number(document.getElementById('settingNormalPrice').value);
+  const premiumPrice=Number(document.getElementById('settingPremiumPrice').value);
+  const advancedPrice=Number(document.getElementById('settingAdvancedPrice').value);
+  if(![normalPrice,premiumPrice,advancedPrice].every(value=>Number.isFinite(value)&&value>=0)){
+    message.style.color='#ff9fb2';message.textContent='Үнийн дүнг зөв оруулна уу.';return;
+  }
+  adminData.settings={
+    brand:document.getElementById('settingBrand').value.trim()||DEFAULT_SITE_SETTINGS.brand,
+    eyebrow:document.getElementById('settingEyebrow').value.trim()||DEFAULT_SITE_SETTINGS.eyebrow,
+    headline:document.getElementById('settingHeadline').value.trim()||DEFAULT_SITE_SETTINGS.headline,
+    intro:document.getElementById('settingIntro').value.trim()||DEFAULT_SITE_SETTINGS.intro,
+    normalPrice,premiumPrice,advancedPrice,
+    normalSub:document.getElementById('settingNormalSub').value.trim()||DEFAULT_SITE_SETTINGS.normalSub,
+    premiumSub:document.getElementById('settingPremiumSub').value.trim()||DEFAULT_SITE_SETTINGS.premiumSub,
+    advancedSub:document.getElementById('settingAdvancedSub').value.trim()||DEFAULT_SITE_SETTINGS.advancedSub,
+    normalFeatures:document.getElementById('settingNormalFeatures').value.trim()||DEFAULT_SITE_SETTINGS.normalFeatures,
+    premiumFeatures:document.getElementById('settingPremiumFeatures').value.trim()||DEFAULT_SITE_SETTINGS.premiumFeatures,
+    advancedFeatures:document.getElementById('settingAdvancedFeatures').value.trim()||DEFAULT_SITE_SETTINGS.advancedFeatures,
+    bankRecipient:document.getElementById('settingBankRecipient').value.trim()||DEFAULT_SITE_SETTINGS.bankRecipient,
+    bankIban:document.getElementById('settingBankIban').value.trim().replace(/\s/g,'').toUpperCase()||DEFAULT_SITE_SETTINGS.bankIban,
+    bankOwner:document.getElementById('settingBankOwner').value.trim()||DEFAULT_SITE_SETTINGS.bankOwner,
+    paymentInfo:document.getElementById('settingPaymentInfo').value.trim()||DEFAULT_SITE_SETTINGS.paymentInfo
+  };
+  saveAdminData();applySiteSettings();message.style.color='#9de6b8';message.textContent='✓ Website-ийн мэдээлэл шинэчлэгдлээ.';
+}
+function resetBuilderForNew(){
+  editingProjectId=null;activePurchaseCode=null;surpriseImageUrl='';selectedSurprise='🎂';
+  document.getElementById('bName').value='';document.getElementById('bDate').value='';
+  document.getElementById('occasionSelect').value='birthday';document.getElementById('photos').value='';document.getElementById('video').value='';
+  document.getElementById('surpriseImage').value='';document.getElementById('customSurprise').value='';document.getElementById('finalMsg').textContent='';
+  applyOccasion();renderSurprise();syncPreview();
+}
+function startNewGreeting(){builderOwnerOverride=null;resetBuilderForNew();go('packages')}
+function startGuideFlow(){
+  if(currentUser()){go('packages');return}
+  pendingAction={type:'guide'};showAuthMode('login');go('authPage');
+}
+function adminNewGreeting(){builderOwnerOverride={phone:'admin',name:'Admin'};resetBuilderForNew();selectedPackage='Advanced';applyPackage('Advanced');go('builder')}
+function renderUserDashboard(){
+  const user=currentUser();if(!user){openAccount();return}
+  adminData=loadAdminData();
+  document.getElementById('userWelcome').textContent='Сайн байна уу, '+user.name;
+  document.getElementById('userPhoneLabel').textContent=user.phone+' · Таны мэндчилгээний account';
+  const payment=adminData.payments.find(item=>item.id===currentPaymentId&&item.ownerPhone===user.phone);
+  const paymentCode=payment?.activationCode?adminData.codes.find(item=>item.code===payment.activationCode):null;
+  const resumeButton=document.getElementById('resumePaymentBtn');
+  const canResume=Boolean(payment&&payment.status!=='rejected'&&(!paymentCode||!paymentCode.used));
+  resumeButton.classList.toggle('hidden',!canResume);resumeButton.textContent=payment?.status==='paid'?'✅ Code авах':'💳 Төлбөр шалгах';
+  const projects=adminData.projects.filter(item=>item.ownerPhone===user.phone);
+  const grid=document.getElementById('userProjectGrid');
+  if(!projects.length){grid.innerHTML='<div class="userEmpty"><div style="font-size:44px;margin-bottom:12px">💌</div>Танд одоогоор хадгалсан мэндчилгээ алга.<br>“Шинэ мэндчилгээ” дарж эхлээрэй.</div>';return}
+  grid.innerHTML=projects.map(item=>{
+    const date=new Date(item.updatedAt||item.createdAt).toLocaleDateString('mn-MN');
+    return '<article class="userProjectCard"><span class="statusDot '+(item.status==='published'?'published':'')+'"></span><div class="eyebrow">'+escapeHtml(item.occasionLabel||'Мэндчилгээ')+'</div><h3>'+escapeHtml(item.recipient)+'</h3><p>'+escapeHtml(item.headline)+'<br>'+escapeHtml(item.plan)+' · '+date+' · '+escapeHtml(item.status)+'</p><div class="userProjectActions"><button class="btn small" onclick="userEditProject(\''+item.id+'\')">✎ Засах</button><button class="btn secondary small" onclick="userPreviewProject(\''+item.id+'\')">👁 Нээх</button></div></article>';
+  }).join('');
+}
+function userEditProject(id){
+  const user=currentUser(),item=adminData.projects.find(project=>project.id===id);
+  if(!user||!item||item.ownerPhone!==user.phone){alert('Энэ мэндчилгээнд хандах эрхгүй байна.');return}
+  adminEditProject(id);
+}
+function userPreviewProject(id){userEditProject(id);if(document.getElementById('builder').classList.contains('active'))openViewer()}
+
+function chooseSurprise(symbol,button){
+  selectedSurprise=symbol;surpriseImageUrl='';
+  document.getElementById('customSurprise').value='';
+  document.getElementById('surpriseImage').value='';
+  document.querySelectorAll('.surpriseChoice').forEach(x=>x.classList.remove('active'));
+  if(button)button.classList.add('active');
+  renderSurprise();
 }
 
-function choose(packageName, price){
-  selectedPackage = packageName;
+function useCustomSurprise(){
+  const value=document.getElementById('customSurprise').value.trim();
+  if(!value)return;
+  selectedSurprise=value;surpriseImageUrl='';
+  document.getElementById('surpriseImage').value='';
+  document.querySelectorAll('.surpriseChoice').forEach(x=>x.classList.remove('active'));
+  renderSurprise();
+}
 
-  document.getElementById("payTitle").textContent =
-    packageName + " Package";
+function loadSurpriseImage(){
+  const file=document.getElementById('surpriseImage').files[0];
+  if(!file)return;
+  if(surpriseImageUrl)URL.revokeObjectURL(surpriseImageUrl);
+  surpriseImageUrl=URL.createObjectURL(file);objectUrls.push(surpriseImageUrl);
+  document.getElementById('customSurprise').value='';
+  document.querySelectorAll('.surpriseChoice').forEach(x=>x.classList.remove('active'));
+  document.getElementById('surpriseMsg').textContent='✓ Таны өөрийн зураг сонгогдлоо.';
+  renderSurprise();
+}
 
-  document.getElementById("payPrice").textContent =
-    price.toLocaleString() + "₮";
+function renderSurprise(){
+  ['pvSurprise','viewerSurprise'].forEach(id=>{
+    const target=document.getElementById(id);if(!target)return;
+    if(surpriseImageUrl){target.innerHTML='';const img=document.createElement('img');img.src=surpriseImageUrl;img.alt='Custom surprise';target.appendChild(img)}
+    else{target.textContent=selectedSurprise||'✨'}
+  });
+}
 
-  go("payment");
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function choose(pkg,price){
+  if(!currentUser()){pendingAction={type:'choose',pkg,price};showAuthMode('login');go('authPage');return}
+  builderOwnerOverride=null;resetBuilderForNew();
+  selectedPackage=pkg;
+  document.getElementById('payTitle').textContent=pkg+' Package';
+  document.getElementById('payPrice').textContent=price.toLocaleString()+'₮';
+  createPaymentOrder(pkg,price);
+  go('payment');
+}
+
+function createPaymentOrder(plan,amount){
+  const user=currentUser();
+  const payment={
+    id:makeId('PAY'),reference:'WS-'+Date.now().toString().slice(-6)+'-'+Math.random().toString(36).slice(2,5).toUpperCase(),
+    plan,amount:Number(amount)||0,status:'pending',ownerPhone:user?.phone||'guest',ownerName:user?.name||'Guest',createdAt:new Date().toISOString(),activationCode:''
+  };
+  adminData.payments.unshift(payment);currentPaymentId=payment.id;sessionStorage.setItem('wishStudioPaymentId',payment.id);saveAdminData();renderPaymentCheckout(payment);
+}
+function renderPaymentCheckout(payment){
+  if(!payment)return;
+  document.getElementById('payTitle').textContent=payment.plan+' Package';
+  document.getElementById('payPrice').textContent=Number(payment.amount).toLocaleString()+'₮';
+  document.getElementById('qpayAmount').textContent=Number(payment.amount).toLocaleString()+'₮';
+  document.getElementById('paymentReference').textContent=payment.reference;
+  const status=document.getElementById('paymentStatus');
+  status.className='paymentStatus '+(payment.status==='paid'?'paid':payment.status==='rejected'?'rejected':'');
+  status.textContent=payment.status==='paid'?'Төлөгдсөн ✓':payment.status==='rejected'?'Цуцлагдсан':'Хүлээгдэж байна';
+  document.getElementById('paymentVerifyResult').className='verifyResult';
+}
+function resumePayment(){
+  adminData=loadAdminData();const payment=adminData.payments.find(item=>item.id===currentPaymentId);
+  if(!payment){alert('Үргэлжлүүлэх төлбөр олдсонгүй.');return}
+  selectedPackage=payment.plan;renderPaymentCheckout(payment);go('payment');
+}
+function uniquePaymentCode(plan){
+  let code='';do{code='WISH-'+plan.slice(0,3).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}while(adminData.codes.some(item=>item.code===code));return code;
+}
+function verifyPayment(){
+  adminData=loadAdminData();
+  const payment=adminData.payments.find(item=>item.id===currentPaymentId);
+  const result=document.getElementById('paymentVerifyResult');
+  if(!payment){result.className='verifyResult error show';result.textContent='Төлбөрийн захиалга олдсонгүй. Багцаа дахин сонгоно уу.';return}
+  renderPaymentCheckout(payment);
+  if(payment.status==='pending'){
+    result.className='verifyResult pending show';result.innerHTML='⏳ Төлбөр хараахан баталгаажаагүй байна.<br>Гүйлгээний утгаа <b>'+escapeHtml(payment.reference)+'</b> гэж зөв бичсэн эсэхээ шалгаад түр хүлээгээрэй.';return;
+  }
+  if(payment.status==='rejected'){
+    result.className='verifyResult error show';result.textContent='Төлбөр баталгаажаагүй байна. Admin-тай холбогдоно уу.';return;
+  }
+  if(!payment.activationCode){
+    const code=uniquePaymentCode(payment.plan);payment.activationCode=code;payment.codeIssuedAt=new Date().toISOString();
+    adminData.codes.unshift({code,plan:payment.plan,used:false,paymentId:payment.id,createdAt:new Date().toISOString()});saveAdminData();
+  }
+  result.className='verifyResult success show';
+  result.innerHTML='<b>🎉 Манайхыг сонгосонд баярлалаа!</b><br>Таны нэг удаагийн activation code:<code class="paymentCode">'+escapeHtml(payment.activationCode)+'</code><div class="verifyActions"><button class="btn small" onclick="useVerifiedPaymentCode(\''+payment.activationCode+'\')">Code ашиглаад Builder нээх →</button><button class="btn secondary small" onclick="copyPaymentCode(\''+payment.activationCode+'\')">⧉ Code хуулах</button></div><small>Энэ code зөвхөн нэг website-д нэг удаа ажиллана.</small>';
+}
+function useVerifiedPaymentCode(code){document.getElementById('code').value=code;activate()}
+function copyPaymentCode(code){
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(()=>alert('Code хуулагдлаа.')).catch(()=>prompt('Code-оо хуулна уу:',code));
+  else prompt('Code-оо хуулна уу:',code);
+}
+function copyPaymentValue(id,label){
+  let value=document.getElementById(id).textContent.trim();if(id==='qpayAmount')value=value.replace(/\D/g,'');
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>alert(label+' хуулагдлаа.')).catch(()=>prompt(label+'-аа хуулна уу:',value));
+  else prompt(label+'-аа хуулна уу:',value);
 }
 
 function activate(){
-  const activationCode =
-    document.getElementById("code").value.trim();
-
-  if(activationCode !== "BDAY-DEMO"){
-    alert("Demo code: BDAY-DEMO");
-    return;
-  }
-
-  applyPackage(selectedPackage);
-  go("builder");
+  const entered=document.getElementById('code').value.trim().toUpperCase();
+  const activation=adminData.codes.find(item=>item.code===entered);
+  if(!activation){alert('Code буруу байна. Admin-аас авсан төлбөрийн code-оо шалгана уу.');return}
+  if(activation.used){alert('Энэ code аль хэдийн нэг website-д ашиглагдсан байна. Нэг code зөвхөн нэг удаа ажиллана.');return}
+  activePurchaseCode=activation.code;selectedPackage=activation.plan;applyPackage(selectedPackage);go('builder');
 }
 
 function demoBuilder(){
-  selectedPackage = "Premium";
-  applyPackage("Premium");
-  go("builder");
+  if(!currentUser()){pendingAction={type:'demo'};showAuthMode('login');go('authPage');return}
+  builderOwnerOverride=null;resetBuilderForNew();
+  selectedPackage='Demo';applyPackage('Demo');go('builder');
 }
 
-function applyPackage(packageName){
-  if(packageName === "Normal"){
-    photoLimit = 6;
-    allowVideo = false;
-    allowColors = false;
-    allowExtra = false;
+function applyPackage(pkg){
+  if(pkg==='Normal'){photoLimit=6;allowVideo=false;allowColors=false;allowExtra=false}
+  else if(pkg==='Premium'){photoLimit=15;allowVideo=true;allowColors=true;allowExtra=false}
+  else if(pkg==='Advanced'){photoLimit=30;allowVideo=true;allowColors=true;allowExtra=true}
+  else if(pkg==='Demo'){photoLimit=15;allowVideo=true;allowColors=true;allowExtra=false}
+  document.getElementById('activePkg').textContent=pkg==='Demo'?'DEMO · Link үүсэхгүй':pkg+' Activated ✓';
+  document.getElementById('photoLimitTag').textContent=photoLimit+' max';
+  toggleFeature('videoFeature',allowVideo);toggleFeature('colorFeature',allowColors);toggleFeature('fontFeature',allowColors);toggleFeature('extraFeature',allowExtra);
+  updateBuilderAccessUI();
+  applyOccasion();
+}
+
+function updateBuilderAccessUI(){
+  const demo=selectedPackage==='Demo';
+  const notice=document.getElementById('builderAccessNotice');
+  document.getElementById('saveDraftBtn').disabled=demo;
+  document.getElementById('finalizeBtn').disabled=demo;
+  notice.classList.toggle('demo',demo);
+  notice.innerHTML=demo?'🧪 <b>Demo горим:</b> Туршиж, Preview хийж болно. Хадгалах, Finalize хийх, link авах боломжгүй.':'🔐 <b>'+escapeHtml(selectedPackage)+' эрх:</b> 1 code = 1 website. Save хиймэгц энэ code зөвхөн тухайн website-д холбогдоно.';
+}
+
+function toggleFeature(id,on){document.getElementById(id).classList.toggle('lockedFeature',!on)}
+
+const occasionPresets={
+  birthday:{opening:'A little birthday surprise for',headline:'Your Special Day',letter:'Happy Birthday! Шинэ нас чинь аз жаргал, гоё дурсамж, хүссэн бүхнээр чинь дүүрэн байгаасай ✨',final:'Happy Birthday ♡',icon:'🎂'},
+  anniversary:{opening:'Celebrating a beautiful journey with',headline:'Our Beautiful Journey',letter:'Хамтдаа бүтээсэн мөч бүхэн үнэ цэнтэй. Бидний дурсамж, хайр, инээд хөөр улам олон жил үргэлжлэх болтугай ✨',final:'Happy Anniversary ♡',icon:'💞'},
+  love:{opening:'Something from the heart for',headline:'Just Because I Love You',letter:'Чи миний амьдралын хамгийн нандин хүн. Өдөр бүрийг минь илүү гэрэлтэй, илүү утга учиртай болгодогт баярлалаа ❤️',final:'With All My Love ♡',icon:'❤️'},
+  congratulations:{opening:'A special celebration for',headline:'You Did It!',letter:'Чиний хөдөлмөр, хичээл зүтгэл гайхалтай үр дүнд хүрлээ. Энэ амжилтаараа бахархаж, дараагийн оргил бүрт чинь аз жаргал хүсье! ✨',final:'Congratulations ✦',icon:'🏆'},
+  thankyou:{opening:'A heartfelt thank you for',headline:'Thank You, Truly',letter:'Үргэлж дэргэд байж, сайхан сэтгэлээрээ дэмждэгт чинь баярлалаа. Чиний хийсэн бүхнийг би үнэхээр их үнэлдэг 💐',final:'With Gratitude ♡',icon:'💐'},
+  apology:{opening:'A message from the heart for',headline:'From My Heart',letter:'Чамайг гомдоосондоо үнэхээр уучлал хүсэж байна. Миний алдааг уучилж, сэтгэлээсээ хэлсэн энэ үгийг минь хүлээж аваарай 💌',final:'I’m Sorry ♡',icon:'💌'}
+};
+
+function applyOccasion(){
+  const key=document.getElementById('occasionSelect').value;
+  if(key==='custom'){
+    document.getElementById('bOpening').focus();
+    return;
   }
-
-  else if(packageName === "Premium"){
-    photoLimit = 15;
-    allowVideo = true;
-    allowColors = true;
-    allowExtra = false;
+  const preset=occasionPresets[key];
+  document.getElementById('bOpening').value=preset.opening;
+  document.getElementById('bHeadline').value=preset.headline;
+  document.getElementById('bLetter').value=preset.letter;
+  document.getElementById('bFinalTitle').value=preset.final;
+  if(!surpriseImageUrl){
+    selectedSurprise=preset.icon;
+    document.getElementById('customSurprise').value='';
+    document.querySelectorAll('.surpriseChoice').forEach(x=>x.classList.toggle('active',x.textContent.trim()===preset.icon));
+    renderSurprise();
   }
-
-  else if(packageName === "Advanced"){
-    photoLimit = 30;
-    allowVideo = true;
-    allowColors = true;
-    allowExtra = true;
-  }
-
-  document.getElementById("activePkg").textContent =
-    packageName + " Activated ✓";
-
-  document.getElementById("photoLimitTag").textContent =
-    photoLimit + " max";
-
-  toggleFeature("videoFeature", allowVideo);
-  toggleFeature("colorFeature", allowColors);
-  toggleFeature("fontFeature", allowColors);
-  toggleFeature("extraFeature", allowExtra);
-
   syncPreview();
 }
 
-function toggleFeature(id, enabled){
-  document
-    .getElementById(id)
-    .classList.toggle("lockedFeature", !enabled);
-}
-
 function syncPreview(){
-  const name =
-    document.getElementById("bName").value ||
-    "Someone Special";
-
-  const headline =
-    document.getElementById("bHeadline").value ||
-    "Your Special Day";
-
-  const letter =
-    document.getElementById("bLetter").value || "";
-
-  const preview =
-    document.getElementById("preview");
-
-  document.getElementById("pvName").textContent = name;
-  document.getElementById("pvHeadline").textContent = headline;
-  document.getElementById("pvLetter").textContent = letter;
-
+  const name=document.getElementById('bName').value||'Someone Special';
+  const opening=document.getElementById('bOpening').value||'Something special for';
+  const headline=document.getElementById('bHeadline').value||'Your Special Day';
+  const letter=document.getElementById('bLetter').value||'';
+  const finalTitle=document.getElementById('bFinalTitle').value||'With love ♡';
+  const pv=document.getElementById('preview');
+  document.getElementById('pvName').textContent=name;
+  document.getElementById('pvOpening').textContent=opening;
+  document.getElementById('pvHeadline').textContent=headline;
+  document.getElementById('pvLetter').textContent=letter;
+  document.getElementById('vOpening').textContent=opening;
+  document.getElementById('vFinalTitle').textContent=finalTitle;
   if(allowColors){
-    preview.style.setProperty(
-      "--preview1",
-      document.getElementById("c1").value
-    );
-
-    preview.style.setProperty(
-      "--preview2",
-      document.getElementById("c2").value
-    );
-
-    preview.style.fontFamily =
-      document.getElementById("fontSelect").value;
+    pv.style.setProperty('--preview1',document.getElementById('c1').value);
+    pv.style.setProperty('--preview2',document.getElementById('c2').value);
+    pv.style.fontFamily=document.getElementById('fontSelect').value;
+  }else{
+    pv.style.setProperty('--preview1','#4b1830');pv.style.setProperty('--preview2','#170b12');pv.style.fontFamily='Georgia,serif';
   }
-
-  else{
-    preview.style.setProperty("--preview1", "#4b1830");
-    preview.style.setProperty("--preview2", "#170b12");
-    preview.style.fontFamily = "Georgia,serif";
-  }
-
-  const extra =
-    document.getElementById("extraText").value || "";
-
-  const extraPreview =
-    document.getElementById("pvExtra");
-
-  if(allowExtra && extra){
-    extraPreview.textContent = extra;
-    extraPreview.classList.remove("hidden");
-  }
-
-  else{
-    extraPreview.classList.add("hidden");
-  }
+  const extra=document.getElementById('extraText').value||'';
+  const ex=document.getElementById('pvExtra');
+  if(allowExtra&&extra){ex.textContent=extra;ex.classList.remove('hidden')}else ex.classList.add('hidden');
 }
 
 function loadPhotos(){
-  const files = [
-    ...document.getElementById("photos").files
-  ];
-
-  const gallery =
-    document.getElementById("gallery");
-
-  const photoMessage =
-    document.getElementById("photoMsg");
-
-  photoMessage.textContent = "";
-
-  if(files.length > photoLimit){
-    photoMessage.textContent =
-      "⚠️ " +
-      selectedPackage +
-      " багц хамгийн ихдээ " +
-      photoLimit +
-      " зураг зөвшөөрнө.";
-  }
-
-  gallery.innerHTML = "";
-
-  files
-    .slice(0, photoLimit)
-    .forEach(file => {
-      const imageUrl =
-        URL.createObjectURL(file);
-
-      objectUrls.push(imageUrl);
-
-      const image =
-        document.createElement("img");
-
-      image.src = imageUrl;
-      gallery.appendChild(image);
-    });
-
-  if(!files.length){
-    gallery.innerHTML =
-      '<div class="ph">Photo 1</div>' +
-      '<div class="ph">Photo 2</div>';
-  }
+  const files=[...document.getElementById('photos').files], gallery=document.getElementById('gallery');
+  document.getElementById('photoMsg').textContent='';
+  if(files.length>photoLimit) document.getElementById('photoMsg').textContent='⚠️ '+selectedPackage+' багц хамгийн ихдээ '+photoLimit+' зураг зөвшөөрнө.';
+  gallery.innerHTML='';
+  files.slice(0,photoLimit).forEach(f=>{
+    const u=URL.createObjectURL(f);objectUrls.push(u);
+    const img=document.createElement('img');img.src=u;gallery.appendChild(img);
+  });
+  if(!files.length) gallery.innerHTML='<div class="ph">Photo 1</div><div class="ph">Photo 2</div>';
 }
 
 function loadVideo(){
-  if(!allowVideo) return;
-
-  const file =
-    document.getElementById("video").files[0];
-
-  const video =
-    document.getElementById("pvVideo");
-
-  if(!file){
-    video.style.display = "none";
-    return;
-  }
-
-  const videoUrl =
-    URL.createObjectURL(file);
-
-  objectUrls.push(videoUrl);
-
-  video.src = videoUrl;
-  video.style.display = "block";
+  if(!allowVideo)return;
+  const f=document.getElementById('video').files[0], v=document.getElementById('pvVideo');
+  if(!f){v.style.display='none';return}
+  const u=URL.createObjectURL(f);objectUrls.push(u);v.src=u;v.style.display='block';
 }
 
 function openViewer(){
   syncPreview();
+  renderSurprise();
+  const name=document.getElementById('bName').value||'Someone Special';
+  const opening=document.getElementById('bOpening').value||'Something special for';
+  const headline=document.getElementById('bHeadline').value||'Your Special Day';
+  const letter=document.getElementById('bLetter').value||'';
+  const finalTitle=document.getElementById('bFinalTitle').value||'With love ♡';
+  document.querySelectorAll('.vName').forEach(x=>x.textContent=name);
+  document.getElementById('vOpening').textContent=opening;
+  document.getElementById('vHeadline1').textContent=headline;
+  document.getElementById('vHeadline2').textContent=headline;
+  document.getElementById('vLetter').textContent=letter;
+  document.getElementById('vFinalTitle').textContent=finalTitle;
 
-  const name =
-    document.getElementById("bName").value ||
-    "Someone Special";
+  const viewer=document.getElementById('viewer');
+  viewer.style.setProperty('--viewer1', allowColors ? document.getElementById('c1').value : '#4b1830');
+  viewer.style.setProperty('--viewer2', allowColors ? document.getElementById('c2').value : '#170b12');
 
-  const headline =
-    document.getElementById("bHeadline").value ||
-    "Your Special Day";
+  const vg=document.getElementById('viewerGallery');
+  vg.innerHTML=document.getElementById('gallery').innerHTML;
+  prepareViewerGallery();
 
-  const letter =
-    document.getElementById("bLetter").value || "";
+  const srcVideo=document.getElementById('pvVideo');
+  const vv=document.getElementById('viewerVideo');
+  if(srcVideo.src && srcVideo.style.display==='block'){vv.src=srcVideo.src;vv.style.display='block'}else{vv.removeAttribute('src');vv.style.display='none'}
 
-  document
-    .querySelectorAll(".vName")
-    .forEach(element => {
-      element.textContent = name;
-    });
-
-  document.getElementById("vHeadline1").textContent =
-    headline;
-
-  document.getElementById("vHeadline2").textContent =
-    headline;
-
-  document.getElementById("vLetter").textContent =
-    letter;
-
-  const viewer =
-    document.getElementById("viewer");
-
-  viewer.style.setProperty(
-    "--viewer1",
-    allowColors
-      ? document.getElementById("c1").value
-      : "#4b1830"
-  );
-
-  viewer.style.setProperty(
-    "--viewer2",
-    allowColors
-      ? document.getElementById("c2").value
-      : "#170b12"
-  );
-
-  const viewerGallery =
-    document.getElementById("viewerGallery");
-
-  viewerGallery.innerHTML =
-    document.getElementById("gallery").innerHTML;
-
-  const previewVideo =
-    document.getElementById("pvVideo");
-
-  const viewerVideo =
-    document.getElementById("viewerVideo");
-
-  if(
-    previewVideo.src &&
-    previewVideo.style.display === "block"
-  ){
-    viewerVideo.src = previewVideo.src;
-    viewerVideo.style.display = "block";
-  }
-
-  else{
-    viewerVideo.removeAttribute("src");
-    viewerVideo.style.display = "none";
-  }
-
-  const extra =
-    document.getElementById("extraText").value.trim();
-
-  document.getElementById("vExtra").textContent =
-    allowExtra && extra
-      ? extra
-      : "May this new chapter be full of happiness and beautiful memories.";
-
+  const extra=document.getElementById('extraText').value.trim();
+  document.getElementById('vExtra').textContent=(allowExtra&&extra)?extra:'May this new chapter be full of happiness and beautiful memories.';
   viewerGo(1);
-  go("viewer");
+  go('viewer');
 }
 
-function viewerGo(pageNumber){
-  document
-    .querySelectorAll(".viewerScreen")
-    .forEach(screen => {
-      screen.classList.remove("active");
-    });
-
-  document
-    .getElementById("vs" + pageNumber)
-    .classList.add("active");
-
-  document.getElementById("viewerCount").textContent =
-    pageNumber + " / 4";
+function viewerGo(n){
+  document.querySelectorAll('.viewerScreen').forEach(x=>x.classList.remove('active'));
+  const next=document.getElementById('vs'+n);
+  next.classList.add('active','pageReveal');
+  if(n===2)resetLetter();
+  if(n===3){
+    const gallery=document.getElementById('viewerGallery');
+    gallery.classList.remove('memoryReveal');
+    void gallery.offsetWidth;
+    gallery.classList.add('memoryReveal');
+  }
+  setTimeout(()=>next.classList.remove('pageReveal'),600);
+  document.getElementById('viewerCount').textContent=n+' / 4';
 }
 
-function fakeFinalize(){
-  document.getElementById("finalMsg").innerHTML =
-    '<span class="success">✓ Preview шалгасны дараа</span> ' +
-    "дараагийн шатанд Finalize нь unique locked link үүсгэнэ.";
+let letterOpening=false;
+function resetLetter(){
+  const scene=document.getElementById('letterScene');
+  if(scene)scene.classList.remove('opening','opened');
+  letterOpening=false;
 }
+function openLetter(){
+  if(letterOpening)return;
+  letterOpening=true;
+  const scene=document.getElementById('letterScene');
+  scene.classList.add('opening');
+  setTimeout(()=>scene.classList.add('opened'),520);
+}
+
+let memoryImages=[],currentMemory=0;
+function prepareViewerGallery(){
+  const gallery=document.getElementById('viewerGallery');
+  memoryImages=[...gallery.querySelectorAll('img')];
+  memoryImages.forEach((img,index)=>{
+    img.style.setProperty('--delay',(index*110)+'ms');
+    img.style.setProperty('--tilt',((index%2?1:-1)*(1+index%3))+'deg');
+    img.setAttribute('role','button');img.setAttribute('tabindex','0');
+    img.setAttribute('aria-label','Дурсамж '+(index+1)+' томоор харах');
+    img.onclick=()=>openMemory(index);
+    img.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openMemory(index)}};
+  });
+}
+function openMemory(index){
+  if(!memoryImages.length)return;
+  currentMemory=index;
+  updateMemoryLightbox();
+  document.getElementById('memoryLightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function updateMemoryLightbox(){
+  const source=memoryImages[currentMemory];
+  const image=document.getElementById('lightboxImage');
+  image.src=source.src;image.alt=source.alt||'Дурсамжийн зураг';
+  document.getElementById('lightboxCount').textContent=(currentMemory+1)+' / '+memoryImages.length;
+  image.style.animation='none';void image.offsetWidth;image.style.animation='';
+}
+function memoryStep(direction){
+  if(!memoryImages.length)return;
+  currentMemory=(currentMemory+direction+memoryImages.length)%memoryImages.length;
+  updateMemoryLightbox();
+}
+function closeMemory(){
+  document.getElementById('memoryLightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',event=>{
+  const lightbox=document.getElementById('memoryLightbox');
+  if(!lightbox.classList.contains('open'))return;
+  if(event.key==='Escape')closeMemory();
+  if(event.key==='ArrowLeft')memoryStep(-1);
+  if(event.key==='ArrowRight')memoryStep(1);
+});
+
+let surpriseOpening=false;
+function openSurprise(){
+  if(surpriseOpening)return;
+  surpriseOpening=true;
+  const content=document.querySelector('#vs1 .viewerContent');
+  content.classList.add('opening');
+  const marks=['✦','♡','✧','★','⋆'];
+  for(let i=0;i<14;i++){
+    const sparkle=document.createElement('span');
+    sparkle.className='sparkle';
+    sparkle.textContent=marks[i%marks.length];
+    const angle=(Math.PI*2*i)/14;
+    const distance=90+Math.random()*110;
+    sparkle.style.setProperty('--x',Math.cos(angle)*distance+'px');
+    sparkle.style.setProperty('--y',Math.sin(angle)*distance+'px');
+    sparkle.style.setProperty('--r',(Math.random()*180-90)+'deg');
+    sparkle.style.color=i%2?'var(--accent)':'#fff4d7';
+    content.appendChild(sparkle);
+    setTimeout(()=>sparkle.remove(),750);
+  }
+  setTimeout(()=>{
+    content.classList.remove('opening');
+    viewerGo(2);
+    surpriseOpening=false;
+  },650);
+}
+
+function currentProjectData(status){
+  const occasion=document.getElementById('occasionSelect');
+  const actualPlan=selectedPackage;
+  const existing=editingProjectId?adminData.projects.find(item=>item.id===editingProjectId):null;
+  const user=currentUser();
+  return {
+    id:editingProjectId||makeId('WS'),
+    recipient:document.getElementById('bName').value.trim()||'Someone Special',
+    eventDate:document.getElementById('bDate').value,
+    occasion:occasion.value,
+    occasionLabel:occasion.options[occasion.selectedIndex].text.replace(/^\S+\s/,''),
+    opening:document.getElementById('bOpening').value,
+    headline:document.getElementById('bHeadline').value,
+    letter:document.getElementById('bLetter').value,
+    finalTitle:document.getElementById('bFinalTitle').value,
+    extra:document.getElementById('extraText').value,
+    color1:document.getElementById('c1').value,
+    color2:document.getElementById('c2').value,
+    surprise:surpriseImageUrl?'Custom image':selectedSurprise,
+    photoCount:Math.min(document.getElementById('photos').files.length,photoLimit),
+    hasVideo:Boolean(document.getElementById('video').files[0]),
+    plan:actualPlan,
+    price:planPrices[actualPlan]||0,
+    activationCode:existing?.activationCode||activePurchaseCode||'',
+    shareUrl:existing?.shareUrl||'',
+    ownerPhone:existing?.ownerPhone||builderOwnerOverride?.phone||user?.phone||'guest',
+    ownerName:existing?.ownerName||builderOwnerOverride?.name||user?.name||'Guest',
+    status,
+    updatedAt:new Date().toISOString()
+  };
+}
+function canPersistBuilder(){
+  if(selectedPackage==='Demo')return false;
+  if(sessionStorage.getItem('wishStudioAdmin')==='yes')return true;
+  if(editingProjectId&&adminData.projects.some(item=>item.id===editingProjectId))return true;
+  const activation=adminData.codes.find(item=>item.code===activePurchaseCode);
+  return Boolean(activation&&!activation.used);
+}
+function saveProject(status){
+  if(selectedPackage==='Demo'){
+    alert('Builder demo нь зөвхөн туршилт. Link авахын тулд багц сонгож, төлбөрийн code идэвхжүүлнэ үү.');return null;
+  }
+  if(!canPersistBuilder()){
+    alert('Хадгалах болон link авахын тулд нэг удаагийн багцын code хэрэгтэй.');return null;
+  }
+  const project=currentProjectData(status);
+  const existing=adminData.projects.findIndex(item=>item.id===project.id);
+  const activation=project.activationCode?adminData.codes.find(item=>item.code===project.activationCode):null;
+  if(activation&&activation.used&&activation.projectId&&activation.projectId!==project.id){
+    alert('Энэ code өөр website-д ашиглагдсан байна.');return null;
+  }
+  if(status==='published')project.shareUrl=location.href.split('#')[0]+'#gift='+encodeURIComponent(project.id);
+  if(existing>=0){project.createdAt=adminData.projects[existing].createdAt;adminData.projects[existing]=project}
+  else{project.createdAt=new Date().toISOString();adminData.projects.unshift(project)}
+  if(activation&&!activation.used){activation.used=true;activation.usedAt=new Date().toISOString();activation.projectId=project.id}
+  editingProjectId=project.id;saveAdminData();renderActivationCodesIfVisible();
+  if(status==='published'){
+    document.getElementById('finalMsg').innerHTML='<span class="success">✓ Published · Link бэлэн</span> · ID: <b>'+project.id+'</b><div class="publishedLink"><code>'+escapeHtml(project.shareUrl)+'</code><button class="btn secondary small" onclick="copyPublishedLink(\''+project.id+'\')">🔗 Link хуулах</button></div>';
+  }else document.getElementById('finalMsg').innerHTML='<span class="success">✓ Draft хадгалагдлаа</span> · ID: <b>'+project.id+'</b>';
+  return project;
+}
+function saveDraft(){saveProject('draft')}
+function fakeFinalize(){saveProject('published')}
+function renderActivationCodesIfVisible(){if(document.getElementById('adminPage').classList.contains('active'))renderActivationCodes()}
+function copyPublishedLink(id){
+  const project=adminData.projects.find(item=>item.id===id);if(!project?.shareUrl)return;
+  if(navigator.clipboard?.writeText){navigator.clipboard.writeText(project.shareUrl).then(()=>alert('Link хуулагдлаа.')).catch(()=>prompt('Link-ээ хуулна уу:',project.shareUrl))}
+  else prompt('Link-ээ хуулна уу:',project.shareUrl);
+}
+function openPublishedGiftFromHash(){
+  const match=location.hash.match(/^#gift=([^&]+)/);if(!match)return;
+  const id=decodeURIComponent(match[1]);const project=adminData.projects.find(item=>item.id===id&&item.status==='published');
+  if(!project)return;
+  adminEditProject(id);openViewer();
+}
+
+function openAdmin(){
+  if(sessionStorage.getItem('wishStudioAdmin')==='yes'){renderAdmin();go('adminPage')}
+  else{document.getElementById('adminUsername').value='';document.getElementById('adminPassword').value='';document.getElementById('adminError').textContent='';go('adminLoginPage')}
+}
+function adminLogin(){
+  const username=document.getElementById('adminUsername').value.trim();
+  const password=document.getElementById('adminPassword').value;
+  if(username!=='99606084'||password!=='0820'){document.getElementById('adminError').textContent='Admin username эсвэл code буруу байна.';return}
+  sessionStorage.setItem('wishStudioAdmin','yes');sessionStorage.setItem('wishStudioAdminName',username);renderAdmin();go('adminPage');
+}
+function adminLogout(){sessionStorage.removeItem('wishStudioAdmin');sessionStorage.removeItem('wishStudioAdminName');refreshAccountButton();go('home')}
+function renderAdmin(){
+  adminData=loadAdminData();
+  const query=(document.getElementById('adminSearch')?.value||'').trim().toLowerCase();
+  const status=document.getElementById('adminStatusFilter')?.value||'all';
+  const projects=adminData.projects.filter(item=>{
+    const matchesStatus=status==='all'||item.status===status;
+    const haystack=(item.id+' '+item.recipient+' '+item.occasionLabel+' '+item.headline+' '+(item.ownerName||'')+' '+(item.ownerPhone||'')).toLowerCase();
+    return matchesStatus&&(!query||haystack.includes(query));
+  });
+  const published=adminData.projects.filter(item=>item.status==='published');
+  document.getElementById('statTotal').textContent=adminData.projects.length;
+  document.getElementById('statPublished').textContent=published.length;
+  document.getElementById('statDraft').textContent=adminData.projects.filter(item=>item.status==='draft').length;
+  document.getElementById('statRevenue').textContent=published.reduce((sum,item)=>sum+(item.price||0),0).toLocaleString()+'₮';
+  document.getElementById('statUsers').textContent=authData.users.length;
+  fillSiteSettingsForm();
+  renderAdminPayments();
+  document.getElementById('orderCountBadge').textContent=projects.length+' items';
+  const list=document.getElementById('adminOrderList');
+  if(!projects.length){list.innerHTML='<div class="emptyState">Одоогоор захиалга алга.<br>Builder-ээс Save draft эсвэл Finalize дараарай.</div>'}
+  else list.innerHTML=projects.map(item=>{
+    const date=new Date(item.updatedAt||item.createdAt).toLocaleDateString('mn-MN');
+    return '<article class="orderCard"><div class="orderMain"><strong>'+escapeHtml(item.recipient)+' · '+escapeHtml(item.headline)+'</strong><div class="orderMeta"><span>'+escapeHtml(item.id)+'</span><span>'+escapeHtml(item.occasionLabel)+'</span><span>'+escapeHtml(item.plan)+'</span><span>'+item.photoCount+' зураг</span><span>👤 '+escapeHtml(item.ownerName||'Guest')+' · '+escapeHtml(item.ownerPhone||'-')+'</span><span>'+date+'</span></div></div><div class="orderActions"><select onchange="setOrderStatus(\''+item.id+'\',this.value)"><option value="draft" '+(item.status==='draft'?'selected':'')+'>Draft</option><option value="published" '+(item.status==='published'?'selected':'')+'>Published</option><option value="archived" '+(item.status==='archived'?'selected':'')+'>Archived</option></select><button class="iconBtn" onclick="adminEditProject(\''+item.id+'\')" title="Засах">✎</button><button class="iconBtn danger" onclick="deleteOrder(\''+item.id+'\')" title="Устгах">×</button></div></article>'
+  }).join('');
+  renderActivationCodes();
+  renderAdminUsers();
+}
+function renderAdminPayments(){
+  const payments=adminData.payments||[];
+  document.getElementById('paymentCountBadge').textContent=payments.length+' payments';
+  const list=document.getElementById('adminPaymentList');
+  if(!payments.length){list.innerHTML='<div class="emptyState">Одоогоор төлбөрийн хүсэлт алга.</div>';return}
+  list.innerHTML=payments.map(payment=>{
+    const date=new Date(payment.createdAt).toLocaleString('mn-MN');
+    const statusText=payment.status==='paid'?'Төлөгдсөн':payment.status==='rejected'?'Цуцлагдсан':'Хүлээгдэж байна';
+    return '<article class="paymentAdminCard"><div><strong>'+escapeHtml(payment.ownerName)+' · '+escapeHtml(payment.plan)+' · '+Number(payment.amount).toLocaleString()+'₮</strong><div class="paymentAdminMeta"><span>'+escapeHtml(payment.reference)+'</span><span>'+escapeHtml(payment.ownerPhone)+'</span><span>'+statusText+'</span><span>'+date+'</span>'+(payment.activationCode?'<span>Code: '+escapeHtml(payment.activationCode)+'</span>':'')+'</div></div><div class="paymentAdminActions"><button class="btn small" onclick="markPaymentStatus(\''+payment.id+'\',\'paid\')">✓ Төлөгдсөн</button><button class="btn secondary small" onclick="markPaymentStatus(\''+payment.id+'\',\'pending\')">⏳ Хүлээх</button><button class="iconBtn danger" onclick="markPaymentStatus(\''+payment.id+'\',\'rejected\')" title="Цуцлах">×</button></div></article>';
+  }).join('');
+}
+function markPaymentStatus(id,status){
+  const payment=adminData.payments.find(item=>item.id===id);if(!payment)return;
+  payment.status=status;payment.updatedAt=new Date().toISOString();if(status==='paid'&&!payment.paidAt)payment.paidAt=new Date().toISOString();saveAdminData();renderAdmin();
+}
+function renderAdminUsers(){
+  document.getElementById('userCountBadge').textContent=authData.users.length+' users';
+  const list=document.getElementById('adminUserList');
+  if(!authData.users.length){list.innerHTML='<div class="emptyState">Бүртгэлтэй хэрэглэгч алга.</div>';return}
+  list.innerHTML=authData.users.map(user=>{
+    const count=adminData.projects.filter(project=>project.ownerPhone===user.phone).length;
+    return '<div class="userRow"><div><strong>'+escapeHtml(user.name)+'</strong><span>'+escapeHtml(user.phone)+' · '+new Date(user.createdAt).toLocaleDateString('mn-MN')+'</span></div><b>'+count+' мэндчилгээ</b></div>';
+  }).join('');
+}
+function setOrderStatus(id,status){const item=adminData.projects.find(project=>project.id===id);if(!item)return;item.status=status;item.updatedAt=new Date().toISOString();saveAdminData();renderAdmin()}
+function deleteOrder(id){if(!confirm('Энэ захиалгыг устгах уу?'))return;adminData.projects=adminData.projects.filter(item=>item.id!==id);saveAdminData();renderAdmin()}
+function adminEditProject(id){
+  const item=adminData.projects.find(project=>project.id===id);if(!item)return;
+  editingProjectId=item.id;builderOwnerOverride=null;activePurchaseCode=item.activationCode||null;selectedPackage=item.plan;applyPackage(item.plan);
+  document.getElementById('bName').value=item.recipient||'';document.getElementById('bDate').value=item.eventDate||'';
+  document.getElementById('occasionSelect').value=item.occasion||'custom';document.getElementById('bOpening').value=item.opening||'';
+  document.getElementById('bHeadline').value=item.headline||'';document.getElementById('bLetter').value=item.letter||'';
+  document.getElementById('bFinalTitle').value=item.finalTitle||'';document.getElementById('extraText').value=item.extra||'';
+  document.getElementById('c1').value=item.color1||'#4b1830';document.getElementById('c2').value=item.color2||'#170b12';
+  if(item.surprise&&item.surprise!=='Custom image')selectedSurprise=item.surprise;
+  surpriseImageUrl='';renderSurprise();syncPreview();
+  document.getElementById('finalMsg').innerHTML='<span class="success">✎ Editing</span> · '+escapeHtml(item.id);go('builder');
+}
+function generateActivationCode(){
+  const plan=document.getElementById('codePlan').value;
+  const code='WISH-'+plan.slice(0,3).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
+  adminData.codes.unshift({code,plan,used:false,createdAt:new Date().toISOString()});saveAdminData();renderActivationCodes();
+}
+function renderActivationCodes(){
+  const active=adminData.codes.filter(item=>!item.used).length;
+  document.getElementById('codeCountBadge').textContent=active+' active';
+  const list=document.getElementById('adminCodeList');
+  if(!adminData.codes.length){list.innerHTML='<div class="emptyState">Activation code үүсгээгүй байна.</div>';return}
+  list.innerHTML=adminData.codes.map(item=>'<div class="codeRow '+(item.used?'used':'')+'"><div><code>'+escapeHtml(item.code)+'</code><span>'+escapeHtml(item.plan)+' · '+(item.used?'used':'active')+'</span></div><button class="iconBtn" onclick="copyActivationCode(\''+item.code+'\')" title="Хуулах">⧉</button></div>').join('');
+}
+function copyActivationCode(code){navigator.clipboard?.writeText(code).catch(()=>{});alert('Code: '+code)}
+function exportAdminData(){
+  const users=authData.users.map(({pinHash,...safeUser})=>safeUser);
+  const blob=new Blob([JSON.stringify({settings:adminData.settings,payments:adminData.payments,projects:adminData.projects,codes:adminData.codes,users},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='wish-studio-admin-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+applySiteSettings();
+refreshAccountButton();
+setTimeout(openPublishedGiftFromHash,0);
 </script>
-
 </body>
 </html>
