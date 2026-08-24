@@ -308,7 +308,7 @@ textarea.field{min-height:110px;resize:vertical}
           <button class="btn" style="width:100%" onclick="userRegister()">Account үүсгэх →</button>
         </div>
         <p class="authError" id="authError"></p>
-        <p class="notice" style="text-align:center">SMS шаардахгүй. Утасны дугаар, PIN-аар шууд нэвтэрнэ.</p>
+        <p class="notice" style="text-align:center">SMS, имэйл шаардахгүй. Утасны дугаар, PIN-аар шууд нэвтэрч мэдээллээ cloud-д хадгална.</p>
       </div>
     </div>
   </div>
@@ -331,11 +331,11 @@ textarea.field{min-height:110px;resize:vertical}
         <div class="eyebrow">Wish Studio control room</div>
         <h2>Admin нэвтрэх</h2>
         <p class="info">Захиалга, activation code болон нийтэлсэн мэндчилгээнүүдээ удирдана.</p>
-        <input id="adminUsername" class="field" inputmode="numeric" placeholder="Admin username">
-        <input id="adminPassword" class="field" type="password" inputmode="numeric" maxlength="4" placeholder="4 оронтой admin code" onkeydown="if(event.key==='Enter')adminLogin()">
+        <input id="adminUsername" class="field" type="email" autocomplete="email" placeholder="Admin имэйл">
+        <input id="adminPassword" class="field" type="password" autocomplete="current-password" placeholder="Admin нууц үг" onkeydown="if(event.key==='Enter')adminLogin()">
         <button class="btn" style="width:100%" onclick="adminLogin()">Нэвтрэх →</button>
         <p class="adminError" id="adminError"></p>
-        <p class="notice">Username: <b>99606084</b><br>Admin code: <b>0820</b></p>
+        <p class="notice">Admin хэсэг тусдаа хамгаалалттай.</p>
       </div>
     </div>
   </div>
@@ -345,7 +345,7 @@ textarea.field{min-height:110px;resize:vertical}
   <div class="adminShell">
     <div class="topbar"><div class="brand">Wish Studio <span style="color:var(--accent)">Admin</span></div><div class="topActions"><button class="adminLink" onclick="go('home')">Website</button><button class="adminLink" onclick="adminLogout()">Гарах</button></div></div>
     <div class="adminHeader">
-      <div><div class="eyebrow">Control room · local</div><h2>Dashboard</h2><p>Мэндчилгээ, захиалга, эрхийн кодоо нэг дороос удирдана.</p></div>
+      <div><div class="eyebrow">Control room · Supabase Cloud</div><h2>Dashboard</h2><p>Мэндчилгээ, захиалга, эрхийн кодоо нэг дороос удирдана.</p></div>
       <div class="adminHeaderActions"><button class="btn secondary small" onclick="exportAdminData()">↓ JSON export</button><button class="btn small" onclick="adminNewGreeting()">＋ New greeting</button></div>
     </div>
     <div class="statsGrid">
@@ -398,7 +398,7 @@ textarea.field{min-height:110px;resize:vertical}
           <div class="adminPanelHead"><h3>Хэрэглэгчид</h3><span class="badge" id="userCountBadge">0 users</span></div>
           <div class="userList" id="adminUserList"></div>
         </section>
-        <div class="adminNote"><b>Browser хадгалалт</b><br>Хэрэглэгчийн мэдээлэл тухайн төхөөрөмжийн browser дээр утасны дугаараар хадгалагдана.</div>
+        <div class="adminNote"><b>Supabase Cloud</b><br>Нийтэлсэн зураг, видео болон мэндчилгээ link нээсэн бүх төхөөрөмж дээр харагдана.</div>
       </aside>
     </div>
   </div>
@@ -466,6 +466,7 @@ textarea.field{min-height:110px;resize:vertical}
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 let selectedPackage='Demo', photoLimit=6, allowVideo=false, allowColors=false, allowExtra=false;
 let objectUrls=[];
@@ -682,7 +683,7 @@ function renderUserDashboard(){
 function userEditProject(id){
   const user=currentUser(),item=adminData.projects.find(project=>project.id===id);
   if(!user||!item||item.ownerPhone!==user.phone){alert('Энэ мэндчилгээнд хандах эрхгүй байна.');return}
-  adminEditProject(id);
+  window.adminEditProject(id);
 }
 function userPreviewProject(id){userEditProject(id);if(document.getElementById('builder').classList.contains('active'))openViewer()}
 
@@ -734,7 +735,7 @@ function choose(pkg,price){
   selectedPackage=pkg;
   document.getElementById('payTitle').textContent=pkg+' Package';
   document.getElementById('payPrice').textContent=price.toLocaleString()+'₮';
-  createPaymentOrder(pkg,price);
+  window.createPaymentOrder(pkg,price);
   go('payment');
 }
 
@@ -1099,8 +1100,8 @@ function saveProject(status){
   }else document.getElementById('finalMsg').innerHTML='<span class="success">✓ Draft хадгалагдлаа</span> · ID: <b>'+project.id+'</b>';
   return project;
 }
-function saveDraft(){saveProject('draft')}
-function fakeFinalize(){saveProject('published')}
+function saveDraft(){window.saveProject('draft')}
+function fakeFinalize(){window.saveProject('published')}
 function renderActivationCodesIfVisible(){if(document.getElementById('adminPage').classList.contains('active'))renderActivationCodes()}
 function copyPublishedLink(id){
   const project=adminData.projects.find(item=>item.id===id);if(!project?.shareUrl)return;
@@ -1111,7 +1112,7 @@ function openPublishedGiftFromHash(){
   const match=location.hash.match(/^#gift=([^&]+)/);if(!match)return;
   const id=decodeURIComponent(match[1]);const project=adminData.projects.find(item=>item.id===id&&item.status==='published');
   if(!project)return;
-  adminEditProject(id);openViewer();
+  window.adminEditProject(id);openViewer();
 }
 
 function openAdmin(){
@@ -1211,5 +1212,6 @@ applySiteSettings();
 refreshAccountButton();
 setTimeout(openPublishedGiftFromHash,0);
 </script>
+<script src="backend.js"></script>
 </body>
 </html>

@@ -14,7 +14,11 @@
     document.body.appendChild(el);setTimeout(()=>el.remove(),4200);
   };
   const setBusy=(button,busy,label)=>{if(!button)return;button.disabled=busy;if(label)button.textContent=busy?'Түр хүлээнэ үү…':label};
-  const userFromProfile=()=>cloud.profile?{id:cloud.profile.id,name:cloud.profile.name||cloud.profile.email,email:cloud.profile.email,phone:cloud.profile.email,isAdmin:Boolean(cloud.profile.is_admin)}:null;
+  const normalizePhone=(value)=>String(value||'').replace(/\D/g,'').slice(-8);
+  const accountEmail=(phone)=>'user-'+phone+'@accounts.wish-studio.mn';
+  const accountPassword=(pin)=>'WishStudio-'+pin+'-2026';
+  const sessionPhone=()=>normalizePhone(cloud.session?.user?.user_metadata?.phone||cloud.profile?.email?.match(/^user-(\d{8})@/)?.[1]||'');
+  const userFromProfile=()=>cloud.profile?{id:cloud.profile.id,name:cloud.profile.name||sessionPhone(),email:cloud.profile.email,phone:sessionPhone(),isAdmin:Boolean(cloud.profile.is_admin)}:null;
   const rowProject=(row)=>({...row.data,id:row.id,status:row.status,shareSlug:row.share_slug,createdAt:row.created_at,updatedAt:row.updated_at,ownerId:row.owner_id,shareUrl:location.href.split('#')[0]+'#gift='+encodeURIComponent(row.share_slug)});
   const rowPayment=(row)=>({...row.data,id:row.id,status:row.status,createdAt:row.created_at,updatedAt:row.updated_at,ownerId:row.owner_id});
   const rowCode=(row)=>({code:row.code,plan:row.plan,used:row.used,projectId:row.project_id,paymentId:row.payment_id,createdAt:row.created_at,usedAt:row.used_at});
@@ -25,7 +29,12 @@
       cloudClient.from('profiles').select('*').eq('id',cloud.session.user.id).single(),
       cloudClient.from('site_settings').select('data').eq('id',1).maybeSingle()
     ]);
-    if(profileResult.data)cloud.profile=profileResult.data;
+    cloud.profile=profileResult.data||{
+      id:cloud.session.user.id,
+      name:cloud.session.user.user_metadata?.name||'',
+      email:cloud.session.user.email||'',
+      is_admin:false
+    };
     const isAdmin=Boolean(cloud.profile?.is_admin);
     const projectQuery=cloudClient.from('projects').select('*').order('updated_at',{ascending:false});
     const paymentQuery=cloudClient.from('payments').select('*').order('created_at',{ascending:false});
@@ -65,33 +74,34 @@
   window.userRegister=async function(){
     const error=document.getElementById('authError');error.textContent='';
     const name=document.getElementById('registerName').value.trim();
-    const email=document.getElementById('registerPhone').value.trim().toLowerCase();
-    const password=document.getElementById('registerPin').value;
+    const phone=normalizePhone(document.getElementById('registerPhone').value);
+    const pin=document.getElementById('registerPin').value;
     const again=document.getElementById('registerPinAgain').value;
     if(name.length<2){error.textContent='Нэрээ бүтнээр нь оруулна уу.';return}
-    if(!/^\S+@\S+\.\S+$/.test(email)){error.textContent='Имэйл хаягаа зөв оруулна уу.';return}
-    if(password.length<8){error.textContent='Нууц үг хамгийн багадаа 8 тэмдэгт байна.';return}
-    if(password!==again){error.textContent='Давтан оруулсан нууц үг таарахгүй байна.';return}
+    if(!/^\d{8}$/.test(phone)){error.textContent='8 оронтой утасны дугаар оруулна уу.';return}
+    if(!/^\d{4,6}$/.test(pin)){error.textContent='PIN 4–6 оронтой тоо байна.';return}
+    if(pin!==again){error.textContent='Давтан оруулсан PIN таарахгүй байна.';return}
     const button=document.querySelector('#registerForm .btn');setBusy(button,true,'Бүртгүүлэх →');
     const {data,error:signError}=await cloudClient.auth.signUp({
-      email,
-      password,
-      options:{data:{name},emailRedirectTo:location.origin}
+      email:accountEmail(phone),
+      password:accountPassword(pin),
+      options:{data:{name,phone}}
     });
     setBusy(button,false,'Бүртгүүлэх →');
-    if(signError){error.textContent=signError.message;return}
-    if(!data.session){error.textContent='Бүртгэл үүслээ. Имэйлээр ирсэн баталгаажуулах холбоосыг нээнэ үү.';return}
-    cloud.session=data.session;await loadCloudData();completeUserLogin();
+    if(signError){error.textContent=signError.message.includes('registered')?'Энэ дугаараар account үүссэн байна. Нэвтрэх хэсгийг ашиглана уу.':'Бүртгүүлэх үед алдаа гарлаа.';return}
+    if(!data.session){error.textContent='Cloud бүртгэлийн тохиргоо бэлэн болоогүй байна.';return}
+    cloud.session=data.session;await loadCloudData();window.completeUserLogin();
   };
   window.userLogin=async function(){
     const error=document.getElementById('authError');error.textContent='';
-    const email=document.getElementById('loginPhone').value.trim().toLowerCase();
-    const password=document.getElementById('loginPin').value;
+    const phone=normalizePhone(document.getElementById('loginPhone').value);
+    const pin=document.getElementById('loginPin').value;
+    if(!/^\d{8}$/.test(phone)||!/^\d{4,6}$/.test(pin)){error.textContent='Утасны дугаар болон PIN-ээ зөв оруулна уу.';return}
     const button=document.querySelector('#loginForm .btn');setBusy(button,true,'Нэвтрэх →');
-    const {data,error:signError}=await cloudClient.auth.signInWithPassword({email,password});
+    const {data,error:signError}=await cloudClient.auth.signInWithPassword({email:accountEmail(phone),password:accountPassword(pin)});
     setBusy(button,false,'Нэвтрэх →');
-    if(signError){error.textContent='Имэйл эсвэл нууц үг буруу байна.';return}
-    cloud.session=data.session;await loadCloudData();completeUserLogin();
+    if(signError){error.textContent='Утасны дугаар эсвэл PIN буруу байна.';return}
+    cloud.session=data.session;await loadCloudData();window.completeUserLogin();
   };
   window.userLogout=async function(){await cloudClient.auth.signOut();cloud.session=null;cloud.profile=null;adminData={projects:[],payments:[],codes:[],settings:{...DEFAULT_SITE_SETTINGS}};authData={users:[]};refreshAccountButton();go('home')};
   window.openAccount=function(){
@@ -103,7 +113,16 @@
     if(cloud.profile?.is_admin){renderAdmin();go('adminPage');return}
     toast('Admin хэсэгт зөвхөн эрхтэй хэрэглэгч нэвтэрнэ.');showAuthMode('login');go('authPage');
   };
-  window.adminLogin=window.userLogin;
+  window.adminLogin=async function(){
+    const error=document.getElementById('adminError');error.textContent='';
+    const email=document.getElementById('adminUsername').value.trim().toLowerCase();
+    const password=document.getElementById('adminPassword').value;
+    const {data,error:signError}=await cloudClient.auth.signInWithPassword({email,password});
+    if(signError){error.textContent='Admin имэйл эсвэл нууц үг буруу байна.';return}
+    cloud.session=data.session;await loadCloudData();
+    if(!cloud.profile?.is_admin){await cloudClient.auth.signOut();cloud.session=null;cloud.profile=null;error.textContent='Энэ account admin эрхгүй байна.';return}
+    renderAdmin();go('adminPage');
+  };
   window.adminLogout=window.userLogout;
 
   window.saveSiteSettings=async function(){
@@ -146,7 +165,7 @@
       project.photoUrls=photoFiles.length?await Promise.all(photoFiles.map((file,i)=>uploadFile(file,project.id,'photo-'+i))):(existing?.photoUrls||[]);
       const videoFile=document.getElementById('video').files[0];project.videoUrl=videoFile?await uploadFile(videoFile,project.id,'video'):(existing?.videoUrl||'');
       const surpriseFile=document.getElementById('surpriseImage').files[0];project.surpriseImageUrl=surpriseFile?await uploadFile(surpriseFile,project.id,'surprise'):(existing?.surpriseImageUrl||'');
-      project.photoCount=project.photoUrls.length;project.hasVideo=Boolean(project.videoUrl);project.ownerId=cloud.session.user.id;project.ownerName=cloud.profile.name;project.ownerPhone=cloud.profile.email;
+      const signedInUser=userFromProfile();project.photoCount=project.photoUrls.length;project.hasVideo=Boolean(project.videoUrl);project.ownerId=cloud.session.user.id;project.ownerName=cloud.profile.name;project.ownerPhone=signedInUser?.phone||'';
       if(!cloud.profile?.is_admin&&project.activationCode){
         const {data:claimed,error:claimError}=await cloudClient.rpc('claim_payment_code',{p_code:project.activationCode,p_project_id:project.id});
         if(claimError||!claimed)throw new Error('Activation code ашиглах боломжгүй байна.');
@@ -161,8 +180,8 @@
     }catch(error){console.error(error);toast('Хадгалах үед алдаа гарлаа: '+error.message);return null}
     finally{setBusy(button,false,status==='published'?'Finalize & Link':'Save draft')}
   };
-  window.saveDraft=()=>saveProject('draft');
-  window.fakeFinalize=()=>saveProject('published');
+  window.saveDraft=()=>window.saveProject('draft');
+  window.fakeFinalize=()=>window.saveProject('published');
   window.copyPublishedLink=function(id){const project=adminData.projects.find(x=>x.id===id);if(!project)return;navigator.clipboard?.writeText(project.shareUrl).then(()=>toast('Link хуулагдлаа.')).catch(()=>prompt('Link-ээ хуулна уу:',project.shareUrl))};
 
   const originalEdit=window.adminEditProject;
@@ -177,11 +196,11 @@
     const match=location.hash.match(/^#gift=([^&]+)/);if(!match)return;const value=decodeURIComponent(match[1]);
     let {data}=await cloudClient.from('projects').select('*').eq('share_slug',value).eq('status','published').maybeSingle();
     if(!data)({data}=await cloudClient.from('projects').select('*').eq('id',value).eq('status','published').maybeSingle());
-    if(!data){toast('Мэндчилгээ олдсонгүй.');return}const item=rowProject(data);adminData.projects=[item,...adminData.projects.filter(x=>x.id!==item.id)];adminEditProject(item.id);openViewer();
+    if(!data){toast('Мэндчилгээ олдсонгүй.');return}const item=rowProject(data);adminData.projects=[item,...adminData.projects.filter(x=>x.id!==item.id)];window.adminEditProject(item.id);openViewer();
   };
 
   window.createPaymentOrder=async function(plan,amount){
-    const user=userFromProfile();if(!user)return;const payment={id:makeId('PAY'),reference:'WS-'+Date.now().toString().slice(-6)+'-'+Math.random().toString(36).slice(2,5).toUpperCase(),plan,amount:Number(amount)||0,status:'pending',ownerPhone:user.email,ownerName:user.name,createdAt:new Date().toISOString(),activationCode:''};
+    const user=userFromProfile();if(!user)return;const payment={id:makeId('PAY'),reference:'WS-'+Date.now().toString().slice(-6)+'-'+Math.random().toString(36).slice(2,5).toUpperCase(),plan,amount:Number(amount)||0,status:'pending',ownerPhone:user.phone,ownerName:user.name,createdAt:new Date().toISOString(),activationCode:''};
     adminData.payments.unshift(payment);currentPaymentId=payment.id;sessionStorage.setItem('wishStudioPaymentId',payment.id);renderPaymentCheckout(payment);
     const {error}=await cloudClient.from('payments').insert({id:payment.id,owner_id:cloud.session.user.id,status:'pending',data:payment});if(error)toast('Төлбөрийн хүсэлт хадгалагдсангүй: '+error.message);
   };
@@ -214,7 +233,7 @@
   async function boot(){
     const {data}=await cloudClient.auth.getSession();cloud.session=data.session;
     if(cloud.session)await loadCloudData();else{adminData.settings={...DEFAULT_SITE_SETTINGS};const {data:settings}=await cloudClient.from('site_settings').select('data').eq('id',1).maybeSingle();if(settings?.data)adminData.settings={...DEFAULT_SITE_SETTINGS,...settings.data};applySiteSettings()}
-    cloud.ready=true;refreshAccountButton();await openPublishedGiftFromHash();
+    cloud.ready=true;refreshAccountButton();await window.openPublishedGiftFromHash();
   }
   cloudClient.auth.onAuthStateChange((_event,session)=>{cloud.session=session;if(!session){cloud.profile=null;refreshAccountButton()}});
   boot().catch(error=>{console.error(error);toast('Cloud холболт түр ажиллахгүй байна.')});
