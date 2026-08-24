@@ -133,7 +133,7 @@ textarea.field{min-height:110px;resize:vertical}
   <div class="guideWrap">
     <p class="guideLead">Доорх зургаан зүйлийг дарааллаар нь хийгээрэй. Товч бүр дээр юу хийхийг нь бичсэн байгаа. 😊</p>
     <div class="guideSteps">
-      <article class="guideStep"><div class="guideIcon">📱<span class="guideNumber">1</span></div><div><h3>Эхлээд нэвтэрнэ</h3><p><b>“Нэвтрэх”</b> дээр дарна. Утасны дугаар, өөрийн PIN кодоо бичнэ. Шинэ хүн бол <b>“Бүртгүүлэх”</b>-ийг дарна.</p></div></article>
+      <article class="guideStep"><div class="guideIcon">📱<span class="guideNumber">1</span></div><div><h3>Эхлээд нэвтэрнэ</h3><p><b>“Нэвтрэх”</b> дээр дарж имэйл, нууц үгээ оруулна. Шинэ хэрэглэгч бол <b>“Бүртгүүлэх”</b>-ийг дарна.</p></div></article>
       <article class="guideStep"><div class="guideIcon">🎁<span class="guideNumber">2</span></div><div><h3>Багцаа сонгоно</h3><p><b>“Багц сонгох”</b> дээр дарна. Normal, Premium, Advanced гурваас дуртайгаа сонгоно.</p></div></article>
       <article class="guideStep"><div class="guideIcon">💳<span class="guideNumber">3</span></div><div><h3>Төлбөрийн кодоо бичнэ</h3><p>Сонгосон багцынхаа төлбөрийг хийнэ. Дараа нь танд өгсөн <b>нууц код</b>-ыг бичнэ. <b>Нэг code зөвхөн нэг website-д нэг удаа</b> ажиллана.</p></div></article>
       <article class="guideStep"><div class="guideIcon">✍️<span class="guideNumber">4</span></div><div><h3>Мэндчилгээгээ бичнэ</h3><p>Хүнийхээ нэр, мэндчилгээний төрөл, хэлэх үгээ бичнэ. Бичих бүрд жижиг website нь шууд өөрчлөгдөнө.</p></div></article>
@@ -292,23 +292,23 @@ textarea.field{min-height:110px;resize:vertical}
       <div class="card authCard">
         <div class="eyebrow" style="text-align:center">Wish Studio members</div>
         <h2>Тавтай морил</h2>
-        <p class="info">Утасны дугаараараа нэвтэрч өөрийн мэндчилгээнүүдээ хадгалж, удирдаарай.</p>
+        <p class="info">Имэйлээрээ нэвтэрч мэндчилгээнүүдээ cloud-д хадгалж, дурын төхөөрөмжөөс удирдаарай.</p>
         <div class="authTabs"><button class="authTab active" id="loginTab" onclick="showAuthMode('login')">Нэвтрэх</button><button class="authTab" id="registerTab" onclick="showAuthMode('register')">Бүртгүүлэх</button></div>
         <div class="authForm active" id="loginForm">
-          <input id="loginPhone" class="field" inputmode="numeric" maxlength="8" placeholder="Утасны дугаар">
-          <input id="loginPin" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 оронтой PIN" onkeydown="if(event.key==='Enter')userLogin()">
+          <input id="loginPhone" class="field" type="email" autocomplete="email" placeholder="Имэйл хаяг">
+          <input id="loginPin" class="field" type="password" autocomplete="current-password" minlength="8" placeholder="Нууц үг" onkeydown="if(event.key==='Enter')userLogin()">
           <button class="btn" style="width:100%" onclick="userLogin()">Нэвтрэх →</button>
         </div>
         <div class="authForm" id="registerForm">
           <input id="registerName" class="field" maxlength="40" placeholder="Таны нэр">
-          <input id="registerPhone" class="field" inputmode="numeric" maxlength="8" placeholder="Утасны дугаар">
-          <p class="phoneHint">Монголын 8 оронтой дугаар оруулна.</p>
-          <input id="registerPin" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="Шинэ 4–6 оронтой PIN">
-          <input id="registerPinAgain" class="field" type="password" inputmode="numeric" maxlength="6" placeholder="PIN давтах">
+          <input id="registerPhone" class="field" type="email" autocomplete="email" placeholder="Имэйл хаяг">
+          <p class="phoneHint">Баталгаажуулах холбоос хүлээн авах имэйлээ оруулна.</p>
+          <input id="registerPin" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Шинэ нууц үг (8+ тэмдэгт)">
+          <input id="registerPinAgain" class="field" type="password" autocomplete="new-password" minlength="8" placeholder="Нууц үг давтах">
           <button class="btn" style="width:100%" onclick="userRegister()">Account үүсгэх →</button>
         </div>
         <p class="authError" id="authError"></p>
-        <p class="notice" style="text-align:center">Demo: SMS илгээхгүй. PIN нь зөвхөн энэ browser дээр хадгалагдана.</p>
+        <p class="notice" style="text-align:center">Supabase хамгаалалттай нэвтрэлт · Өгөгдөл cloud-д хадгалагдана.</p>
       </div>
     </div>
   </div>
@@ -331,11 +331,11 @@ textarea.field{min-height:110px;resize:vertical}
         <div class="eyebrow">Wish Studio control room</div>
         <h2>Admin нэвтрэх</h2>
         <p class="info">Захиалга, activation code болон нийтэлсэн мэндчилгээнүүдээ удирдана.</p>
-        <input id="adminUsername" class="field" inputmode="numeric" placeholder="Admin username">
-        <input id="adminPassword" class="field" type="password" inputmode="numeric" maxlength="4" placeholder="4 оронтой admin code" onkeydown="if(event.key==='Enter')adminLogin()">
+        <input id="adminUsername" class="field" type="email" autocomplete="email" placeholder="Admin имэйл">
+        <input id="adminPassword" class="field" type="password" autocomplete="current-password" placeholder="Admin нууц үг" onkeydown="if(event.key==='Enter')adminLogin()">
         <button class="btn" style="width:100%" onclick="adminLogin()">Нэвтрэх →</button>
         <p class="adminError" id="adminError"></p>
-        <p class="notice">Username: <b>99606084</b><br>Admin code: <b>0820</b></p>
+        <p class="notice">Admin эрхийг Supabase profile-оор хамгаална.</p>
       </div>
     </div>
   </div>
@@ -345,7 +345,7 @@ textarea.field{min-height:110px;resize:vertical}
   <div class="adminShell">
     <div class="topbar"><div class="brand">Wish Studio <span style="color:var(--accent)">Admin</span></div><div class="topActions"><button class="adminLink" onclick="go('home')">Website</button><button class="adminLink" onclick="adminLogout()">Гарах</button></div></div>
     <div class="adminHeader">
-      <div><div class="eyebrow">Control room · local demo</div><h2>Dashboard</h2><p>Мэндчилгээ, захиалга, эрхийн кодоо нэг дороос удирдана.</p></div>
+      <div><div class="eyebrow">Control room · Supabase Cloud</div><h2>Dashboard</h2><p>Мэндчилгээ, захиалга, эрхийн кодоо нэг дороос удирдана.</p></div>
       <div class="adminHeaderActions"><button class="btn secondary small" onclick="exportAdminData()">↓ JSON export</button><button class="btn small" onclick="adminNewGreeting()">＋ New greeting</button></div>
     </div>
     <div class="statsGrid">
@@ -398,7 +398,7 @@ textarea.field{min-height:110px;resize:vertical}
           <div class="adminPanelHead"><h3>Хэрэглэгчид</h3><span class="badge" id="userCountBadge">0 users</span></div>
           <div class="userList" id="adminUserList"></div>
         </section>
-        <div class="adminNote"><b>Local admin demo</b><br>Энд хадгалсан мэдээлэл зөвхөн энэ browser дээр үлдэнэ. Жинхэнэ олон хэрэглэгчтэй хувилбарт database, login болон file storage backend холбоно.</div>
+        <div class="adminNote"><b>Supabase Cloud Admin</b><br>Хэрэглэгч, мэндчилгээ, төлбөр болон зураг/видео мэдээлэл хамгаалалттай cloud database-д хадгалагдана.</div>
       </aside>
     </div>
   </div>
@@ -466,6 +466,7 @@ textarea.field{min-height:110px;resize:vertical}
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 let selectedPackage='Demo', photoLimit=6, allowVideo=false, allowColors=false, allowExtra=false;
 let objectUrls=[];
@@ -560,32 +561,10 @@ function completeUserLogin(user){
   renderUserDashboard();go('userPage');
 }
 async function userRegister(){
-  const error=document.getElementById('authError');error.textContent='';
-  const name=document.getElementById('registerName').value.trim();
-  const phone=normalizePhone(document.getElementById('registerPhone').value);
-  const pin=document.getElementById('registerPin').value;
-  const again=document.getElementById('registerPinAgain').value;
-  if(name.length<2){error.textContent='Нэрээ бүтнээр нь оруулна уу.';return}
-  if(!/^\d{8}$/.test(phone)){error.textContent='8 оронтой утасны дугаар оруулна уу.';return}
-  if(phone==='99606084'){error.textContent='Энэ дугаар admin-д зориулагдсан.';return}
-  if(!/^\d{4,6}$/.test(pin)){error.textContent='PIN 4–6 оронтой тоо байна.';return}
-  if(pin!==again){error.textContent='Давтан оруулсан PIN таарахгүй байна.';return}
-  if(authData.users.some(user=>user.phone===phone)){error.textContent='Энэ дугаараар account үүссэн байна. Нэвтрэх хэсгийг ашиглана уу.';return}
-  const user={id:makeId('USR'),name,phone,pinHash:await hashPin(pin),createdAt:new Date().toISOString()};
-  authData.users.unshift(user);saveAuthData();completeUserLogin(user);
+  document.getElementById('authError').textContent='Cloud нэвтрэлт ачаалж байна. Түр хүлээгээд дахин оролдоно уу.';
 }
 async function userLogin(){
-  const error=document.getElementById('authError');error.textContent='';
-  const phone=normalizePhone(document.getElementById('loginPhone').value);
-  const pin=document.getElementById('loginPin').value;
-  if(phone==='99606084'){
-    if(pin!=='0820'){error.textContent='Admin code буруу байна.';return}
-    pendingAction=null;sessionStorage.removeItem('wishStudioUser');sessionStorage.setItem('wishStudioAdmin','yes');sessionStorage.setItem('wishStudioAdminName',phone);
-    refreshAccountButton();renderAdmin();go('adminPage');return;
-  }
-  const user=authData.users.find(item=>item.phone===phone);
-  if(!user||user.pinHash!==await hashPin(pin)){error.textContent='Утасны дугаар эсвэл PIN буруу байна.';return}
-  user.lastLoginAt=new Date().toISOString();saveAuthData();completeUserLogin(user);
+  document.getElementById('authError').textContent='Cloud нэвтрэлт ачаалж байна. Түр хүлээгээд дахин оролдоно уу.';
 }
 function userLogout(){sessionStorage.removeItem('wishStudioUser');refreshAccountButton();go('home')}
 
@@ -1119,10 +1098,7 @@ function openAdmin(){
   else{document.getElementById('adminUsername').value='';document.getElementById('adminPassword').value='';document.getElementById('adminError').textContent='';go('adminLoginPage')}
 }
 function adminLogin(){
-  const username=document.getElementById('adminUsername').value.trim();
-  const password=document.getElementById('adminPassword').value;
-  if(username!=='99606084'||password!=='0820'){document.getElementById('adminError').textContent='Admin username эсвэл code буруу байна.';return}
-  sessionStorage.setItem('wishStudioAdmin','yes');sessionStorage.setItem('wishStudioAdminName',username);renderAdmin();go('adminPage');
+  document.getElementById('adminError').textContent='Supabase admin нэвтрэлт ачаалж байна.';
 }
 function adminLogout(){sessionStorage.removeItem('wishStudioAdmin');sessionStorage.removeItem('wishStudioAdminName');refreshAccountButton();go('home')}
 function renderAdmin(){
@@ -1211,5 +1187,6 @@ applySiteSettings();
 refreshAccountButton();
 setTimeout(openPublishedGiftFromHash,0);
 </script>
+<script src="backend.js"></script>
 </body>
 </html>

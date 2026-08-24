@@ -10,11 +10,8 @@ GitHub Pages-д шууд байрлуулах нэг файлтай website.
 4. `Deploy from a branch` → `main` → `/ (root)` сонгоод `Save` дарна.
 5. Хэдэн минутын дараа GitHub Pages-ийн link гарна.
 
-## Admin нэвтрэх
+## Cloud backend
 
-- Утас: `99606084`
-- PIN: `0820`
+Төсөл Supabase Auth, Postgres database, Row Level Security болон Storage ашиглана. Хэрэглэгчийн бүртгэл, мэндчилгээ, төлбөр, зураг болон видео browser-оос хамаарахгүйгээр cloud-д хадгалагдана.
 
-## Анхаарах зүйл
-
-Энэ нь static demo хувилбар. Account, төлбөр, захиалга болон admin мэдээлэл browser-ийн localStorage-д хадгалагддаг. Өөр төхөөрөмжөөс орсон хэрэглэгчийн мэдээллийг admin харахгүй. Жинхэнэ олон хэрэглэгчтэй үйлчилгээ болгохын тулд database, backend болон server-side authentication холбоно.
+Database бүтцийг `supabase/migrations/001_initial.sql` файлаас үүсгэнэ. Admin эрхийг нууц кодоор бус `profiles.is_admin` талбараар хамгаална.
