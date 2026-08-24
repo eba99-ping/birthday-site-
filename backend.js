@@ -73,7 +73,11 @@
     if(password.length<8){error.textContent='Нууц үг хамгийн багадаа 8 тэмдэгт байна.';return}
     if(password!==again){error.textContent='Давтан оруулсан нууц үг таарахгүй байна.';return}
     const button=document.querySelector('#registerForm .btn');setBusy(button,true,'Бүртгүүлэх →');
-    const {data,error:signError}=await cloudClient.auth.signUp({email,password,options:{data:{name}}});
+    const {data,error:signError}=await cloudClient.auth.signUp({
+      email,
+      password,
+      options:{data:{name},emailRedirectTo:location.origin}
+    });
     setBusy(button,false,'Бүртгүүлэх →');
     if(signError){error.textContent=signError.message;return}
     if(!data.session){error.textContent='Бүртгэл үүслээ. Имэйлээр ирсэн баталгаажуулах холбоосыг нээнэ үү.';return}
